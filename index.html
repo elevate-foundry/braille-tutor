@@ -1434,12 +1434,25 @@ function submitTutor(raw) {
   // Intent detection: normalize natural phrasing to commands
   function detectIntent(text) {
     const t = text.replace(/['']/g, "'");
-    // Topics first (so "practice grade 2" picks grade 2, not "start")
-    if (/\b(letters?|alphabet|a-z|a to z)\b/.test(t)) return "topic:0";
-    if (/\b(numbers?|digits?|0-9|counting|number system|numeric)\b/.test(t)) return "topic:5";
-    if (/\b(words?|spelling|uncontracted)\b/.test(t) && !/\bwordsigns?\b/.test(t)) return "topic:6";
-    if (/\b(grade\s*2|g2|wordsigns?|contractions?|contracted)\b/.test(t)) return "topic:7";
-    if (/\b(shortforms?|abbreviations?)\b/.test(t)) return "topic:9";
+    // Questions about specific items go to LLM, not topic switch
+    // "What is the letter f?" or "How do numbers work?" are questions, not commands
+    const isQuestion = /\b(what|how|who|where|when|why|is|does|are|can|could|tell me about|explain)\b/.test(t);
+    // Topics: only trigger for command-style phrasing, not questions
+    if (!isQuestion) {
+      if (/\b(letters?|alphabet|a-z|a to z)\b/.test(t)) return "topic:0";
+      if (/\b(numbers?|digits?|0-9|counting|number system|numeric)\b/.test(t)) return "topic:5";
+      if (/\b(words?|spelling|uncontracted)\b/.test(t) && !/\bwordsigns?\b/.test(t)) return "topic:6";
+      if (/\b(grade\s*2|g2|wordsigns?|contractions?|contracted)\b/.test(t)) return "topic:7";
+      if (/\b(shortforms?|abbreviations?)\b/.test(t)) return "topic:9";
+    }
+    // But "teach me letters" / "practice numbers" are commands even with topic keywords
+    if (/\b(teach|learn|practice|show me|try)\b/.test(t)) {
+      if (/\b(letters?|alphabet|a-z|a to z)\b/.test(t)) return "topic:0";
+      if (/\b(numbers?|digits?|0-9|counting|number system|numeric)\b/.test(t)) return "topic:5";
+      if (/\b(words?|spelling|uncontracted)\b/.test(t) && !/\bwordsigns?\b/.test(t)) return "topic:6";
+      if (/\b(grade\s*2|g2|wordsigns?|contractions?|contracted)\b/.test(t)) return "topic:7";
+      if (/\b(shortforms?|abbreviations?)\b/.test(t)) return "topic:9";
+    }
     // Start / test
     if (/\b(test|quiz|start|begin|go|ready|let'?s go|let'?s start|practice)\b/.test(t)) return "start";
     // Review
