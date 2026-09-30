@@ -1,0 +1,2727 @@
+[
+  {
+    "type": "letter",
+    "id": "letter_a",
+    "keywords": [
+      "a",
+      "letter a",
+      "letter",
+      "alphabet",
+      "letters",
+      "1",
+      "dots 1",
+      "⠁"
+    ],
+    "fact": "The letter 'a' in UEB braille is ⠁ (dots 1). row 1 (dots 1-2-4-5 only)"
+  },
+  {
+    "type": "letter",
+    "id": "letter_b",
+    "keywords": [
+      "b",
+      "letter b",
+      "letter",
+      "alphabet",
+      "letters",
+      "1-2",
+      "dots 1-2",
+      "⠃"
+    ],
+    "fact": "The letter 'b' in UEB braille is ⠃ (dots 1-2). row 1"
+  },
+  {
+    "type": "letter",
+    "id": "letter_c",
+    "keywords": [
+      "c",
+      "letter c",
+      "letter",
+      "alphabet",
+      "letters",
+      "1-4",
+      "dots 1-4",
+      "⠉"
+    ],
+    "fact": "The letter 'c' in UEB braille is ⠉ (dots 1-4). row 1"
+  },
+  {
+    "type": "letter",
+    "id": "letter_d",
+    "keywords": [
+      "d",
+      "letter d",
+      "letter",
+      "alphabet",
+      "letters",
+      "1-4-5",
+      "dots 1-4-5",
+      "⠙"
+    ],
+    "fact": "The letter 'd' in UEB braille is ⠙ (dots 1-4-5). row 1"
+  },
+  {
+    "type": "letter",
+    "id": "letter_e",
+    "keywords": [
+      "e",
+      "letter e",
+      "letter",
+      "alphabet",
+      "letters",
+      "1-5",
+      "dots 1-5",
+      "⠑"
+    ],
+    "fact": "The letter 'e' in UEB braille is ⠑ (dots 1-5). row 1"
+  },
+  {
+    "type": "letter",
+    "id": "letter_f",
+    "keywords": [
+      "f",
+      "letter f",
+      "letter",
+      "alphabet",
+      "letters",
+      "1-2-4",
+      "dots 1-2-4",
+      "⠋"
+    ],
+    "fact": "The letter 'f' in UEB braille is ⠋ (dots 1-2-4). row 1 pattern shifted (same as a-e but with dot 4 added instead of dot 5)"
+  },
+  {
+    "type": "letter",
+    "id": "letter_g",
+    "keywords": [
+      "g",
+      "letter g",
+      "letter",
+      "alphabet",
+      "letters",
+      "1-2-4-5",
+      "dots 1-2-4-5",
+      "⠛"
+    ],
+    "fact": "The letter 'g' in UEB braille is ⠛ (dots 1-2-4-5). row 2"
+  },
+  {
+    "type": "letter",
+    "id": "letter_h",
+    "keywords": [
+      "h",
+      "letter h",
+      "letter",
+      "alphabet",
+      "letters",
+      "1-2-5",
+      "dots 1-2-5",
+      "⠓"
+    ],
+    "fact": "The letter 'h' in UEB braille is ⠓ (dots 1-2-5). row 2"
+  },
+  {
+    "type": "letter",
+    "id": "letter_i",
+    "keywords": [
+      "i",
+      "letter i",
+      "letter",
+      "alphabet",
+      "letters",
+      "2-4",
+      "dots 2-4",
+      "⠊"
+    ],
+    "fact": "The letter 'i' in UEB braille is ⠊ (dots 2-4). row 2"
+  },
+  {
+    "type": "letter",
+    "id": "letter_j",
+    "keywords": [
+      "j",
+      "letter j",
+      "letter",
+      "alphabet",
+      "letters",
+      "2-4-5",
+      "dots 2-4-5",
+      "⠚"
+    ],
+    "fact": "The letter 'j' in UEB braille is ⠚ (dots 2-4-5). row 2"
+  },
+  {
+    "type": "letter",
+    "id": "letter_k",
+    "keywords": [
+      "k",
+      "letter k",
+      "letter",
+      "alphabet",
+      "letters",
+      "1-3",
+      "dots 1-3",
+      "⠅"
+    ],
+    "fact": "The letter 'k' in UEB braille is ⠅ (dots 1-3). row 3 (add dot 3 to a-e)"
+  },
+  {
+    "type": "letter",
+    "id": "letter_l",
+    "keywords": [
+      "l",
+      "letter l",
+      "letter",
+      "alphabet",
+      "letters",
+      "1-2-3",
+      "dots 1-2-3",
+      "⠇"
+    ],
+    "fact": "The letter 'l' in UEB braille is ⠇ (dots 1-2-3). row 3"
+  },
+  {
+    "type": "letter",
+    "id": "letter_m",
+    "keywords": [
+      "m",
+      "letter m",
+      "letter",
+      "alphabet",
+      "letters",
+      "1-3-4",
+      "dots 1-3-4",
+      "⠍"
+    ],
+    "fact": "The letter 'm' in UEB braille is ⠍ (dots 1-3-4). row 3"
+  },
+  {
+    "type": "letter",
+    "id": "letter_n",
+    "keywords": [
+      "n",
+      "letter n",
+      "letter",
+      "alphabet",
+      "letters",
+      "1-3-4-5",
+      "dots 1-3-4-5",
+      "⠝"
+    ],
+    "fact": "The letter 'n' in UEB braille is ⠝ (dots 1-3-4-5). row 3"
+  },
+  {
+    "type": "letter",
+    "id": "letter_o",
+    "keywords": [
+      "o",
+      "letter o",
+      "letter",
+      "alphabet",
+      "letters",
+      "1-3-5",
+      "dots 1-3-5",
+      "⠕"
+    ],
+    "fact": "The letter 'o' in UEB braille is ⠕ (dots 1-3-5). row 3"
+  },
+  {
+    "type": "letter",
+    "id": "letter_p",
+    "keywords": [
+      "p",
+      "letter p",
+      "letter",
+      "alphabet",
+      "letters",
+      "1-2-3-4",
+      "dots 1-2-3-4",
+      "⠏"
+    ],
+    "fact": "The letter 'p' in UEB braille is ⠏ (dots 1-2-3-4). row 4 (add dots 3+4 to a-e)"
+  },
+  {
+    "type": "letter",
+    "id": "letter_q",
+    "keywords": [
+      "q",
+      "letter q",
+      "letter",
+      "alphabet",
+      "letters",
+      "1-2-3-4-5",
+      "dots 1-2-3-4-5",
+      "⠟"
+    ],
+    "fact": "The letter 'q' in UEB braille is ⠟ (dots 1-2-3-4-5). row 4"
+  },
+  {
+    "type": "letter",
+    "id": "letter_r",
+    "keywords": [
+      "r",
+      "letter r",
+      "letter",
+      "alphabet",
+      "letters",
+      "1-2-3-5",
+      "dots 1-2-3-5",
+      "⠗"
+    ],
+    "fact": "The letter 'r' in UEB braille is ⠗ (dots 1-2-3-5). row 4"
+  },
+  {
+    "type": "letter",
+    "id": "letter_s",
+    "keywords": [
+      "s",
+      "letter s",
+      "letter",
+      "alphabet",
+      "letters",
+      "2-3-4",
+      "dots 2-3-4",
+      "⠎"
+    ],
+    "fact": "The letter 's' in UEB braille is ⠎ (dots 2-3-4). row 4"
+  },
+  {
+    "type": "letter",
+    "id": "letter_t",
+    "keywords": [
+      "t",
+      "letter t",
+      "letter",
+      "alphabet",
+      "letters",
+      "2-3-4-5",
+      "dots 2-3-4-5",
+      "⠞"
+    ],
+    "fact": "The letter 't' in UEB braille is ⠞ (dots 2-3-4-5). row 4"
+  },
+  {
+    "type": "letter",
+    "id": "letter_u",
+    "keywords": [
+      "u",
+      "letter u",
+      "letter",
+      "alphabet",
+      "letters",
+      "1-3-6",
+      "dots 1-3-6",
+      "⠥"
+    ],
+    "fact": "The letter 'u' in UEB braille is ⠥ (dots 1-3-6). row 5 (add dot 6 to k-o)"
+  },
+  {
+    "type": "letter",
+    "id": "letter_v",
+    "keywords": [
+      "v",
+      "letter v",
+      "letter",
+      "alphabet",
+      "letters",
+      "1-2-3-6",
+      "dots 1-2-3-6",
+      "⠧"
+    ],
+    "fact": "The letter 'v' in UEB braille is ⠧ (dots 1-2-3-6). row 5"
+  },
+  {
+    "type": "letter",
+    "id": "letter_w",
+    "keywords": [
+      "w",
+      "letter w",
+      "letter",
+      "alphabet",
+      "letters",
+      "2-4-5-6",
+      "dots 2-4-5-6",
+      "⠺"
+    ],
+    "fact": "The letter 'w' in UEB braille is ⠺ (dots 2-4-5-6). exception -- w was not in the original French alphabet Louis Braille used"
+  },
+  {
+    "type": "letter",
+    "id": "letter_x",
+    "keywords": [
+      "x",
+      "letter x",
+      "letter",
+      "alphabet",
+      "letters",
+      "1-3-4-6",
+      "dots 1-3-4-6",
+      "⠭"
+    ],
+    "fact": "The letter 'x' in UEB braille is ⠭ (dots 1-3-4-6). row 5"
+  },
+  {
+    "type": "letter",
+    "id": "letter_y",
+    "keywords": [
+      "y",
+      "letter y",
+      "letter",
+      "alphabet",
+      "letters",
+      "1-3-4-5-6",
+      "dots 1-3-4-5-6",
+      "⠽"
+    ],
+    "fact": "The letter 'y' in UEB braille is ⠽ (dots 1-3-4-5-6). row 5"
+  },
+  {
+    "type": "letter",
+    "id": "letter_z",
+    "keywords": [
+      "z",
+      "letter z",
+      "letter",
+      "alphabet",
+      "letters",
+      "1-3-5-6",
+      "dots 1-3-5-6",
+      "⠵"
+    ],
+    "fact": "The letter 'z' in UEB braille is ⠵ (dots 1-3-5-6). row 5"
+  },
+  {
+    "type": "number",
+    "id": "number_0",
+    "keywords": [
+      "0",
+      "number 0",
+      "number",
+      "numbers",
+      "digit",
+      "digits",
+      "numeric"
+    ],
+    "fact": "The digit 0 in UEB is ⠼⠚ (numeric indicator dots 3-4-5-6, then dots 2-4-5). Numbers use the same cell as letter 'j' but preceded by the numeric indicator. The numeric indicator is ⠼ (dots 3-4-5-6). Once a numeric indicator appears, all following a-j cells are read as digits until a space, letter sign, or non-digit appears."
+  },
+  {
+    "type": "number",
+    "id": "number_1",
+    "keywords": [
+      "1",
+      "number 1",
+      "number",
+      "numbers",
+      "digit",
+      "digits",
+      "numeric"
+    ],
+    "fact": "The digit 1 in UEB is ⠼⠁ (numeric indicator dots 3-4-5-6, then dots 1). Numbers use the same cell as letter 'a' but preceded by the numeric indicator. The numeric indicator is ⠼ (dots 3-4-5-6). Once a numeric indicator appears, all following a-j cells are read as digits until a space, letter sign, or non-digit appears."
+  },
+  {
+    "type": "number",
+    "id": "number_2",
+    "keywords": [
+      "2",
+      "number 2",
+      "number",
+      "numbers",
+      "digit",
+      "digits",
+      "numeric"
+    ],
+    "fact": "The digit 2 in UEB is ⠼⠃ (numeric indicator dots 3-4-5-6, then dots 1-2). Numbers use the same cell as letter 'b' but preceded by the numeric indicator. The numeric indicator is ⠼ (dots 3-4-5-6). Once a numeric indicator appears, all following a-j cells are read as digits until a space, letter sign, or non-digit appears."
+  },
+  {
+    "type": "number",
+    "id": "number_3",
+    "keywords": [
+      "3",
+      "number 3",
+      "number",
+      "numbers",
+      "digit",
+      "digits",
+      "numeric"
+    ],
+    "fact": "The digit 3 in UEB is ⠼⠉ (numeric indicator dots 3-4-5-6, then dots 1-4). Numbers use the same cell as letter 'c' but preceded by the numeric indicator. The numeric indicator is ⠼ (dots 3-4-5-6). Once a numeric indicator appears, all following a-j cells are read as digits until a space, letter sign, or non-digit appears."
+  },
+  {
+    "type": "number",
+    "id": "number_4",
+    "keywords": [
+      "4",
+      "number 4",
+      "number",
+      "numbers",
+      "digit",
+      "digits",
+      "numeric"
+    ],
+    "fact": "The digit 4 in UEB is ⠼⠙ (numeric indicator dots 3-4-5-6, then dots 1-4-5). Numbers use the same cell as letter 'd' but preceded by the numeric indicator. The numeric indicator is ⠼ (dots 3-4-5-6). Once a numeric indicator appears, all following a-j cells are read as digits until a space, letter sign, or non-digit appears."
+  },
+  {
+    "type": "number",
+    "id": "number_5",
+    "keywords": [
+      "5",
+      "number 5",
+      "number",
+      "numbers",
+      "digit",
+      "digits",
+      "numeric"
+    ],
+    "fact": "The digit 5 in UEB is ⠼⠑ (numeric indicator dots 3-4-5-6, then dots 1-5). Numbers use the same cell as letter 'e' but preceded by the numeric indicator. The numeric indicator is ⠼ (dots 3-4-5-6). Once a numeric indicator appears, all following a-j cells are read as digits until a space, letter sign, or non-digit appears."
+  },
+  {
+    "type": "number",
+    "id": "number_6",
+    "keywords": [
+      "6",
+      "number 6",
+      "number",
+      "numbers",
+      "digit",
+      "digits",
+      "numeric"
+    ],
+    "fact": "The digit 6 in UEB is ⠼⠋ (numeric indicator dots 3-4-5-6, then dots 1-2-4). Numbers use the same cell as letter 'f' but preceded by the numeric indicator. The numeric indicator is ⠼ (dots 3-4-5-6). Once a numeric indicator appears, all following a-j cells are read as digits until a space, letter sign, or non-digit appears."
+  },
+  {
+    "type": "number",
+    "id": "number_7",
+    "keywords": [
+      "7",
+      "number 7",
+      "number",
+      "numbers",
+      "digit",
+      "digits",
+      "numeric"
+    ],
+    "fact": "The digit 7 in UEB is ⠼⠛ (numeric indicator dots 3-4-5-6, then dots 1-2-4-5). Numbers use the same cell as letter 'g' but preceded by the numeric indicator. The numeric indicator is ⠼ (dots 3-4-5-6). Once a numeric indicator appears, all following a-j cells are read as digits until a space, letter sign, or non-digit appears."
+  },
+  {
+    "type": "number",
+    "id": "number_8",
+    "keywords": [
+      "8",
+      "number 8",
+      "number",
+      "numbers",
+      "digit",
+      "digits",
+      "numeric"
+    ],
+    "fact": "The digit 8 in UEB is ⠼⠓ (numeric indicator dots 3-4-5-6, then dots 1-2-5). Numbers use the same cell as letter 'h' but preceded by the numeric indicator. The numeric indicator is ⠼ (dots 3-4-5-6). Once a numeric indicator appears, all following a-j cells are read as digits until a space, letter sign, or non-digit appears."
+  },
+  {
+    "type": "number",
+    "id": "number_9",
+    "keywords": [
+      "9",
+      "number 9",
+      "number",
+      "numbers",
+      "digit",
+      "digits",
+      "numeric"
+    ],
+    "fact": "The digit 9 in UEB is ⠼⠊ (numeric indicator dots 3-4-5-6, then dots 2-4). Numbers use the same cell as letter 'i' but preceded by the numeric indicator. The numeric indicator is ⠼ (dots 3-4-5-6). Once a numeric indicator appears, all following a-j cells are read as digits until a space, letter sign, or non-digit appears."
+  },
+  {
+    "type": "concept",
+    "id": "number_system",
+    "keywords": [
+      "number",
+      "numbers",
+      "digit",
+      "numeric",
+      "number system",
+      "how numbers work",
+      "counting"
+    ],
+    "fact": "UEB numbers: digits 1-9 and 0 use the same cells as letters a-j. They are preceded by the numeric indicator ⠼ (dots 3-4-5-6). For example, 42 is ⠼⠙⠃ (numeric indicator + d + b). Multi-digit numbers don't need a new indicator for each digit. The letter sign ⠰ (dots 5-6) is used after a number if the next character is a-j to prevent it from being read as a digit."
+  },
+  {
+    "type": "punctuation",
+    "id": "punct_period",
+    "keywords": [
+      "period",
+      ".",
+      "punctuation",
+      "symbol"
+    ],
+    "fact": "The period (.) in UEB is ⠲ (dots 2-5-6)."
+  },
+  {
+    "type": "punctuation",
+    "id": "punct_full_stop",
+    "keywords": [
+      "full stop",
+      ".",
+      "punctuation",
+      "symbol"
+    ],
+    "fact": "The full stop (.) in UEB is ⠲ (dots 2-5-6)."
+  },
+  {
+    "type": "punctuation",
+    "id": "punct_comma",
+    "keywords": [
+      "comma",
+      ",",
+      "punctuation",
+      "symbol"
+    ],
+    "fact": "The comma (,) in UEB is ⠂ (dots 2)."
+  },
+  {
+    "type": "punctuation",
+    "id": "punct_semicolon",
+    "keywords": [
+      "semicolon",
+      ";",
+      "punctuation",
+      "symbol"
+    ],
+    "fact": "The semicolon (;) in UEB is ⠆ (dots 2-3)."
+  },
+  {
+    "type": "punctuation",
+    "id": "punct_colon",
+    "keywords": [
+      "colon",
+      ":",
+      "punctuation",
+      "symbol"
+    ],
+    "fact": "The colon (:) in UEB is ⠒ (dots 2-5)."
+  },
+  {
+    "type": "punctuation",
+    "id": "punct_exclamation_mark",
+    "keywords": [
+      "exclamation mark",
+      "!",
+      "punctuation",
+      "symbol"
+    ],
+    "fact": "The exclamation mark (!) in UEB is ⠖ (dots 2-3-5)."
+  },
+  {
+    "type": "punctuation",
+    "id": "punct_question_mark",
+    "keywords": [
+      "question mark",
+      "?",
+      "punctuation",
+      "symbol"
+    ],
+    "fact": "The question mark (?) in UEB is ⠦ (dots 2-3-6)."
+  },
+  {
+    "type": "punctuation",
+    "id": "punct_apostrophe",
+    "keywords": [
+      "apostrophe",
+      "'",
+      "punctuation",
+      "symbol"
+    ],
+    "fact": "The apostrophe (') in UEB is ⠄ (dots 3)."
+  },
+  {
+    "type": "punctuation",
+    "id": "punct_hyphen",
+    "keywords": [
+      "hyphen",
+      "-",
+      "punctuation",
+      "symbol"
+    ],
+    "fact": "The hyphen (-) in UEB is ⠤ (dots 3-6)."
+  },
+  {
+    "type": "indicator",
+    "id": "capital_letter",
+    "keywords": [
+      "capital",
+      "uppercase",
+      "capitalization",
+      "capital letter",
+      "indicator"
+    ],
+    "fact": "Capital letter indicator: ⠠ (dots 6). Placed before a single uppercase letter. For two consecutive capitals, use capital word indicator: ⠠⠠ (two cells of dots 6). For three or more consecutive capitals, use capital passage indicator: ⠠⠠⠠ (three cells), and end with capital terminator ⠠⠄ (dots 6 + dots 3)."
+  },
+  {
+    "type": "indicator",
+    "id": "numeric_indicator",
+    "keywords": [
+      "numeric indicator",
+      "number sign",
+      "number indicator"
+    ],
+    "fact": "Numeric indicator: ⠼ (dots 3-4-5-6). Placed before digits. It signals that the following a-j cells should be read as 1-9,0 instead of letters."
+  },
+  {
+    "type": "indicator",
+    "id": "grade1_indicator",
+    "keywords": [
+      "grade 1 indicator",
+      "letter sign",
+      "grade 1 symbol"
+    ],
+    "fact": "Grade 1 indicator (letter sign): ⠰ (dots 5-6). Used to indicate that the next cell is a letter, not a number or contraction. For example, after a number, to show that the next cell is a letter a-j rather than a digit."
+  },
+  {
+    "type": "alphabetic_wordsign",
+    "id": "aws_but",
+    "keywords": [
+      "but",
+      "wordsign",
+      "grade 2",
+      "contraction",
+      "alphabetic wordsign"
+    ],
+    "fact": "Alphabetic wordsign: 'but' = ⠃ (letter b, dots 1-2). This is the same cell as the letter 'b'. It can only be used when it stands alone (surrounded by spaces or punctuation). In Grade 2 (contracted) braille, the single letter b represents the whole word 'but'."
+  },
+  {
+    "type": "alphabetic_wordsign",
+    "id": "aws_can",
+    "keywords": [
+      "can",
+      "wordsign",
+      "grade 2",
+      "contraction",
+      "alphabetic wordsign"
+    ],
+    "fact": "Alphabetic wordsign: 'can' = ⠉ (letter c, dots 1-4). This is the same cell as the letter 'c'. It can only be used when it stands alone (surrounded by spaces or punctuation). In Grade 2 (contracted) braille, the single letter c represents the whole word 'can'."
+  },
+  {
+    "type": "alphabetic_wordsign",
+    "id": "aws_do",
+    "keywords": [
+      "do",
+      "wordsign",
+      "grade 2",
+      "contraction",
+      "alphabetic wordsign"
+    ],
+    "fact": "Alphabetic wordsign: 'do' = ⠙ (letter d, dots 1-4-5). This is the same cell as the letter 'd'. It can only be used when it stands alone (surrounded by spaces or punctuation). In Grade 2 (contracted) braille, the single letter d represents the whole word 'do'."
+  },
+  {
+    "type": "alphabetic_wordsign",
+    "id": "aws_every",
+    "keywords": [
+      "every",
+      "wordsign",
+      "grade 2",
+      "contraction",
+      "alphabetic wordsign"
+    ],
+    "fact": "Alphabetic wordsign: 'every' = ⠑ (letter e, dots 1-5). This is the same cell as the letter 'e'. It can only be used when it stands alone (surrounded by spaces or punctuation). In Grade 2 (contracted) braille, the single letter e represents the whole word 'every'."
+  },
+  {
+    "type": "alphabetic_wordsign",
+    "id": "aws_from",
+    "keywords": [
+      "from",
+      "wordsign",
+      "grade 2",
+      "contraction",
+      "alphabetic wordsign"
+    ],
+    "fact": "Alphabetic wordsign: 'from' = ⠋ (letter f, dots 1-2-4). This is the same cell as the letter 'f'. It can only be used when it stands alone (surrounded by spaces or punctuation). In Grade 2 (contracted) braille, the single letter f represents the whole word 'from'."
+  },
+  {
+    "type": "alphabetic_wordsign",
+    "id": "aws_go",
+    "keywords": [
+      "go",
+      "wordsign",
+      "grade 2",
+      "contraction",
+      "alphabetic wordsign"
+    ],
+    "fact": "Alphabetic wordsign: 'go' = ⠛ (letter g, dots 1-2-4-5). This is the same cell as the letter 'g'. It can only be used when it stands alone (surrounded by spaces or punctuation). In Grade 2 (contracted) braille, the single letter g represents the whole word 'go'."
+  },
+  {
+    "type": "alphabetic_wordsign",
+    "id": "aws_have",
+    "keywords": [
+      "have",
+      "wordsign",
+      "grade 2",
+      "contraction",
+      "alphabetic wordsign"
+    ],
+    "fact": "Alphabetic wordsign: 'have' = ⠓ (letter h, dots 1-2-5). This is the same cell as the letter 'h'. It can only be used when it stands alone (surrounded by spaces or punctuation). In Grade 2 (contracted) braille, the single letter h represents the whole word 'have'."
+  },
+  {
+    "type": "alphabetic_wordsign",
+    "id": "aws_just",
+    "keywords": [
+      "just",
+      "wordsign",
+      "grade 2",
+      "contraction",
+      "alphabetic wordsign"
+    ],
+    "fact": "Alphabetic wordsign: 'just' = ⠚ (letter j, dots 2-4-5). This is the same cell as the letter 'j'. It can only be used when it stands alone (surrounded by spaces or punctuation). In Grade 2 (contracted) braille, the single letter j represents the whole word 'just'."
+  },
+  {
+    "type": "alphabetic_wordsign",
+    "id": "aws_knowledge",
+    "keywords": [
+      "knowledge",
+      "wordsign",
+      "grade 2",
+      "contraction",
+      "alphabetic wordsign"
+    ],
+    "fact": "Alphabetic wordsign: 'knowledge' = ⠅ (letter k, dots 1-3). This is the same cell as the letter 'k'. It can only be used when it stands alone (surrounded by spaces or punctuation). In Grade 2 (contracted) braille, the single letter k represents the whole word 'knowledge'."
+  },
+  {
+    "type": "alphabetic_wordsign",
+    "id": "aws_like",
+    "keywords": [
+      "like",
+      "wordsign",
+      "grade 2",
+      "contraction",
+      "alphabetic wordsign"
+    ],
+    "fact": "Alphabetic wordsign: 'like' = ⠇ (letter l, dots 1-2-3). This is the same cell as the letter 'l'. It can only be used when it stands alone (surrounded by spaces or punctuation). In Grade 2 (contracted) braille, the single letter l represents the whole word 'like'."
+  },
+  {
+    "type": "alphabetic_wordsign",
+    "id": "aws_more",
+    "keywords": [
+      "more",
+      "wordsign",
+      "grade 2",
+      "contraction",
+      "alphabetic wordsign"
+    ],
+    "fact": "Alphabetic wordsign: 'more' = ⠍ (letter m, dots 1-3-4). This is the same cell as the letter 'm'. It can only be used when it stands alone (surrounded by spaces or punctuation). In Grade 2 (contracted) braille, the single letter m represents the whole word 'more'."
+  },
+  {
+    "type": "alphabetic_wordsign",
+    "id": "aws_not",
+    "keywords": [
+      "not",
+      "wordsign",
+      "grade 2",
+      "contraction",
+      "alphabetic wordsign"
+    ],
+    "fact": "Alphabetic wordsign: 'not' = ⠝ (letter n, dots 1-3-4-5). This is the same cell as the letter 'n'. It can only be used when it stands alone (surrounded by spaces or punctuation). In Grade 2 (contracted) braille, the single letter n represents the whole word 'not'."
+  },
+  {
+    "type": "alphabetic_wordsign",
+    "id": "aws_people",
+    "keywords": [
+      "people",
+      "wordsign",
+      "grade 2",
+      "contraction",
+      "alphabetic wordsign"
+    ],
+    "fact": "Alphabetic wordsign: 'people' = ⠏ (letter p, dots 1-2-3-4). This is the same cell as the letter 'p'. It can only be used when it stands alone (surrounded by spaces or punctuation). In Grade 2 (contracted) braille, the single letter p represents the whole word 'people'."
+  },
+  {
+    "type": "alphabetic_wordsign",
+    "id": "aws_quite",
+    "keywords": [
+      "quite",
+      "wordsign",
+      "grade 2",
+      "contraction",
+      "alphabetic wordsign"
+    ],
+    "fact": "Alphabetic wordsign: 'quite' = ⠟ (letter q, dots 1-2-3-4-5). This is the same cell as the letter 'q'. It can only be used when it stands alone (surrounded by spaces or punctuation). In Grade 2 (contracted) braille, the single letter q represents the whole word 'quite'."
+  },
+  {
+    "type": "alphabetic_wordsign",
+    "id": "aws_rather",
+    "keywords": [
+      "rather",
+      "wordsign",
+      "grade 2",
+      "contraction",
+      "alphabetic wordsign"
+    ],
+    "fact": "Alphabetic wordsign: 'rather' = ⠗ (letter r, dots 1-2-3-5). This is the same cell as the letter 'r'. It can only be used when it stands alone (surrounded by spaces or punctuation). In Grade 2 (contracted) braille, the single letter r represents the whole word 'rather'."
+  },
+  {
+    "type": "alphabetic_wordsign",
+    "id": "aws_so",
+    "keywords": [
+      "so",
+      "wordsign",
+      "grade 2",
+      "contraction",
+      "alphabetic wordsign"
+    ],
+    "fact": "Alphabetic wordsign: 'so' = ⠎ (letter s, dots 2-3-4). This is the same cell as the letter 's'. It can only be used when it stands alone (surrounded by spaces or punctuation). In Grade 2 (contracted) braille, the single letter s represents the whole word 'so'."
+  },
+  {
+    "type": "alphabetic_wordsign",
+    "id": "aws_that",
+    "keywords": [
+      "that",
+      "wordsign",
+      "grade 2",
+      "contraction",
+      "alphabetic wordsign"
+    ],
+    "fact": "Alphabetic wordsign: 'that' = ⠞ (letter t, dots 2-3-4-5). This is the same cell as the letter 't'. It can only be used when it stands alone (surrounded by spaces or punctuation). In Grade 2 (contracted) braille, the single letter t represents the whole word 'that'."
+  },
+  {
+    "type": "alphabetic_wordsign",
+    "id": "aws_us",
+    "keywords": [
+      "us",
+      "wordsign",
+      "grade 2",
+      "contraction",
+      "alphabetic wordsign"
+    ],
+    "fact": "Alphabetic wordsign: 'us' = ⠥ (letter u, dots 1-3-6). This is the same cell as the letter 'u'. It can only be used when it stands alone (surrounded by spaces or punctuation). In Grade 2 (contracted) braille, the single letter u represents the whole word 'us'."
+  },
+  {
+    "type": "alphabetic_wordsign",
+    "id": "aws_very",
+    "keywords": [
+      "very",
+      "wordsign",
+      "grade 2",
+      "contraction",
+      "alphabetic wordsign"
+    ],
+    "fact": "Alphabetic wordsign: 'very' = ⠧ (letter v, dots 1-2-3-6). This is the same cell as the letter 'v'. It can only be used when it stands alone (surrounded by spaces or punctuation). In Grade 2 (contracted) braille, the single letter v represents the whole word 'very'."
+  },
+  {
+    "type": "alphabetic_wordsign",
+    "id": "aws_will",
+    "keywords": [
+      "will",
+      "wordsign",
+      "grade 2",
+      "contraction",
+      "alphabetic wordsign"
+    ],
+    "fact": "Alphabetic wordsign: 'will' = ⠺ (letter w, dots 2-4-5-6). This is the same cell as the letter 'w'. It can only be used when it stands alone (surrounded by spaces or punctuation). In Grade 2 (contracted) braille, the single letter w represents the whole word 'will'."
+  },
+  {
+    "type": "alphabetic_wordsign",
+    "id": "aws_it",
+    "keywords": [
+      "it",
+      "wordsign",
+      "grade 2",
+      "contraction",
+      "alphabetic wordsign"
+    ],
+    "fact": "Alphabetic wordsign: 'it' = ⠭ (letter x, dots 1-3-4-6). This is the same cell as the letter 'x'. It can only be used when it stands alone (surrounded by spaces or punctuation). In Grade 2 (contracted) braille, the single letter x represents the whole word 'it'."
+  },
+  {
+    "type": "alphabetic_wordsign",
+    "id": "aws_you",
+    "keywords": [
+      "you",
+      "wordsign",
+      "grade 2",
+      "contraction",
+      "alphabetic wordsign"
+    ],
+    "fact": "Alphabetic wordsign: 'you' = ⠽ (letter y, dots 1-3-4-5-6). This is the same cell as the letter 'y'. It can only be used when it stands alone (surrounded by spaces or punctuation). In Grade 2 (contracted) braille, the single letter y represents the whole word 'you'."
+  },
+  {
+    "type": "alphabetic_wordsign",
+    "id": "aws_as",
+    "keywords": [
+      "as",
+      "wordsign",
+      "grade 2",
+      "contraction",
+      "alphabetic wordsign"
+    ],
+    "fact": "Alphabetic wordsign: 'as' = ⠵ (letter z, dots 1-3-5-6). This is the same cell as the letter 'z'. It can only be used when it stands alone (surrounded by spaces or punctuation). In Grade 2 (contracted) braille, the single letter z represents the whole word 'as'."
+  },
+  {
+    "type": "strong_wordsign",
+    "id": "sws_child",
+    "keywords": [
+      "child",
+      "wordsign",
+      "strong wordsign",
+      "grade 2",
+      "contraction"
+    ],
+    "fact": "Strong wordsign: 'child' = ⠡ (dots 1-6). Standing alone only. These signs use dots in both upper and lower halves of the cell."
+  },
+  {
+    "type": "strong_wordsign",
+    "id": "sws_shall",
+    "keywords": [
+      "shall",
+      "wordsign",
+      "strong wordsign",
+      "grade 2",
+      "contraction"
+    ],
+    "fact": "Strong wordsign: 'shall' = ⠩ (dots 1-4-6). Standing alone only. These signs use dots in both upper and lower halves of the cell."
+  },
+  {
+    "type": "strong_wordsign",
+    "id": "sws_this",
+    "keywords": [
+      "this",
+      "wordsign",
+      "strong wordsign",
+      "grade 2",
+      "contraction"
+    ],
+    "fact": "Strong wordsign: 'this' = ⠹ (dots 1-4-5-6). Standing alone only. These signs use dots in both upper and lower halves of the cell."
+  },
+  {
+    "type": "strong_wordsign",
+    "id": "sws_which",
+    "keywords": [
+      "which",
+      "wordsign",
+      "strong wordsign",
+      "grade 2",
+      "contraction"
+    ],
+    "fact": "Strong wordsign: 'which' = ⠱ (dots 1-5-6). Standing alone only. These signs use dots in both upper and lower halves of the cell."
+  },
+  {
+    "type": "strong_wordsign",
+    "id": "sws_out",
+    "keywords": [
+      "out",
+      "wordsign",
+      "strong wordsign",
+      "grade 2",
+      "contraction"
+    ],
+    "fact": "Strong wordsign: 'out' = ⠳ (dots 1-2-5-6). Standing alone only. These signs use dots in both upper and lower halves of the cell."
+  },
+  {
+    "type": "strong_wordsign",
+    "id": "sws_still",
+    "keywords": [
+      "still",
+      "wordsign",
+      "strong wordsign",
+      "grade 2",
+      "contraction"
+    ],
+    "fact": "Strong wordsign: 'still' = ⠌ (dots 3-4). Standing alone only. These signs use dots in both upper and lower halves of the cell."
+  },
+  {
+    "type": "strong_contraction",
+    "id": "sc_and",
+    "keywords": [
+      "and",
+      "contraction",
+      "strong contraction",
+      "grade 2"
+    ],
+    "fact": "Strong contraction: 'and' = ⠯ (dots 1-2-3-4-6). Can be used as a whole word (standing alone) or as part of a word (groupsign). For example, 'band' = b + ⠯ (b + and), 'fortune' = ⠿ + une (for + une)."
+  },
+  {
+    "type": "strong_contraction",
+    "id": "sc_for",
+    "keywords": [
+      "for",
+      "contraction",
+      "strong contraction",
+      "grade 2"
+    ],
+    "fact": "Strong contraction: 'for' = ⠿ (dots 1-2-3-4-5-6). Can be used as a whole word (standing alone) or as part of a word (groupsign). For example, 'band' = b + ⠿ (b + and), 'fortune' = ⠿ + une (for + une)."
+  },
+  {
+    "type": "strong_contraction",
+    "id": "sc_of",
+    "keywords": [
+      "of",
+      "contraction",
+      "strong contraction",
+      "grade 2"
+    ],
+    "fact": "Strong contraction: 'of' = ⠷ (dots 1-2-3-5-6). Can be used as a whole word (standing alone) or as part of a word (groupsign). For example, 'band' = b + ⠷ (b + and), 'fortune' = ⠿ + une (for + une)."
+  },
+  {
+    "type": "strong_contraction",
+    "id": "sc_the",
+    "keywords": [
+      "the",
+      "contraction",
+      "strong contraction",
+      "grade 2"
+    ],
+    "fact": "Strong contraction: 'the' = ⠮ (dots 2-3-4-6). Can be used as a whole word (standing alone) or as part of a word (groupsign). For example, 'band' = b + ⠮ (b + and), 'fortune' = ⠿ + une (for + une)."
+  },
+  {
+    "type": "strong_contraction",
+    "id": "sc_with",
+    "keywords": [
+      "with",
+      "contraction",
+      "strong contraction",
+      "grade 2"
+    ],
+    "fact": "Strong contraction: 'with' = ⠾ (dots 2-3-4-5-6). Can be used as a whole word (standing alone) or as part of a word (groupsign). For example, 'band' = b + ⠾ (b + and), 'fortune' = ⠿ + une (for + une)."
+  },
+  {
+    "type": "strong_groupsign",
+    "id": "sg_ch",
+    "keywords": [
+      "ch",
+      "groupsign",
+      "strong groupsign",
+      "grade 2",
+      "contraction"
+    ],
+    "fact": "Strong groupsign: 'ch' = ⠡ (dots 1-6). Used within words to shorten common letter combinations. Cannot bridge syllable boundaries after aspirated h (e.g., 'mishap' does not use the 'sh' groupsign because sh bridges mis-hap)."
+  },
+  {
+    "type": "strong_groupsign",
+    "id": "sg_gh",
+    "keywords": [
+      "gh",
+      "groupsign",
+      "strong groupsign",
+      "grade 2",
+      "contraction"
+    ],
+    "fact": "Strong groupsign: 'gh' = ⠣ (dots 1-2-6). Used within words to shorten common letter combinations. Cannot bridge syllable boundaries after aspirated h (e.g., 'mishap' does not use the 'sh' groupsign because sh bridges mis-hap)."
+  },
+  {
+    "type": "strong_groupsign",
+    "id": "sg_sh",
+    "keywords": [
+      "sh",
+      "groupsign",
+      "strong groupsign",
+      "grade 2",
+      "contraction"
+    ],
+    "fact": "Strong groupsign: 'sh' = ⠩ (dots 1-4-6). Used within words to shorten common letter combinations. Cannot bridge syllable boundaries after aspirated h (e.g., 'mishap' does not use the 'sh' groupsign because sh bridges mis-hap)."
+  },
+  {
+    "type": "strong_groupsign",
+    "id": "sg_th",
+    "keywords": [
+      "th",
+      "groupsign",
+      "strong groupsign",
+      "grade 2",
+      "contraction"
+    ],
+    "fact": "Strong groupsign: 'th' = ⠹ (dots 1-4-5-6). Used within words to shorten common letter combinations. Cannot bridge syllable boundaries after aspirated h (e.g., 'mishap' does not use the 'sh' groupsign because sh bridges mis-hap)."
+  },
+  {
+    "type": "strong_groupsign",
+    "id": "sg_wh",
+    "keywords": [
+      "wh",
+      "groupsign",
+      "strong groupsign",
+      "grade 2",
+      "contraction"
+    ],
+    "fact": "Strong groupsign: 'wh' = ⠱ (dots 1-5-6). Used within words to shorten common letter combinations. Cannot bridge syllable boundaries after aspirated h (e.g., 'mishap' does not use the 'sh' groupsign because sh bridges mis-hap)."
+  },
+  {
+    "type": "strong_groupsign",
+    "id": "sg_ed",
+    "keywords": [
+      "ed",
+      "groupsign",
+      "strong groupsign",
+      "grade 2",
+      "contraction"
+    ],
+    "fact": "Strong groupsign: 'ed' = ⠫ (dots 1-2-4-6). Used within words to shorten common letter combinations. Cannot bridge syllable boundaries after aspirated h (e.g., 'mishap' does not use the 'sh' groupsign because sh bridges mis-hap)."
+  },
+  {
+    "type": "strong_groupsign",
+    "id": "sg_er",
+    "keywords": [
+      "er",
+      "groupsign",
+      "strong groupsign",
+      "grade 2",
+      "contraction"
+    ],
+    "fact": "Strong groupsign: 'er' = ⠻ (dots 1-2-4-5-6). Used within words to shorten common letter combinations. Cannot bridge syllable boundaries after aspirated h (e.g., 'mishap' does not use the 'sh' groupsign because sh bridges mis-hap)."
+  },
+  {
+    "type": "strong_groupsign",
+    "id": "sg_ou",
+    "keywords": [
+      "ou",
+      "groupsign",
+      "strong groupsign",
+      "grade 2",
+      "contraction"
+    ],
+    "fact": "Strong groupsign: 'ou' = ⠳ (dots 1-2-5-6). Used within words to shorten common letter combinations. Cannot bridge syllable boundaries after aspirated h (e.g., 'mishap' does not use the 'sh' groupsign because sh bridges mis-hap)."
+  },
+  {
+    "type": "strong_groupsign",
+    "id": "sg_ow",
+    "keywords": [
+      "ow",
+      "groupsign",
+      "strong groupsign",
+      "grade 2",
+      "contraction"
+    ],
+    "fact": "Strong groupsign: 'ow' = ⠪ (dots 2-4-6). Used within words to shorten common letter combinations. Cannot bridge syllable boundaries after aspirated h (e.g., 'mishap' does not use the 'sh' groupsign because sh bridges mis-hap)."
+  },
+  {
+    "type": "strong_groupsign",
+    "id": "sg_st",
+    "keywords": [
+      "st",
+      "groupsign",
+      "strong groupsign",
+      "grade 2",
+      "contraction"
+    ],
+    "fact": "Strong groupsign: 'st' = ⠌ (dots 3-4). Used within words to shorten common letter combinations. Cannot bridge syllable boundaries after aspirated h (e.g., 'mishap' does not use the 'sh' groupsign because sh bridges mis-hap)."
+  },
+  {
+    "type": "strong_groupsign",
+    "id": "sg_ar",
+    "keywords": [
+      "ar",
+      "groupsign",
+      "strong groupsign",
+      "grade 2",
+      "contraction"
+    ],
+    "fact": "Strong groupsign: 'ar' = ⠜ (dots 3-4-5). Used within words to shorten common letter combinations. Cannot bridge syllable boundaries after aspirated h (e.g., 'mishap' does not use the 'sh' groupsign because sh bridges mis-hap)."
+  },
+  {
+    "type": "strong_groupsign",
+    "id": "sg_ing",
+    "keywords": [
+      "ing",
+      "groupsign",
+      "strong groupsign",
+      "grade 2",
+      "contraction"
+    ],
+    "fact": "Strong groupsign: 'ing' = ⠬ (dots 3-4-6). Used within words to shorten common letter combinations. Cannot bridge syllable boundaries after aspirated h (e.g., 'mishap' does not use the 'sh' groupsign because sh bridges mis-hap)."
+  },
+  {
+    "type": "lower_wordsign",
+    "id": "lws_be",
+    "keywords": [
+      "be",
+      "wordsign",
+      "lower wordsign",
+      "grade 2",
+      "contraction"
+    ],
+    "fact": "Lower wordsign: 'be' = ⠆ (dots 2-3). Standing alone only. Uses only lower dots (dots 2-3-5-6). Subject to the lower sign rule: cannot be adjacent to punctuation that also uses only lower dots."
+  },
+  {
+    "type": "lower_wordsign",
+    "id": "lws_enough",
+    "keywords": [
+      "enough",
+      "wordsign",
+      "lower wordsign",
+      "grade 2",
+      "contraction"
+    ],
+    "fact": "Lower wordsign: 'enough' = ⠢ (dots 2-6). Standing alone only. Uses only lower dots (dots 2-3-5-6). Subject to the lower sign rule: cannot be adjacent to punctuation that also uses only lower dots."
+  },
+  {
+    "type": "lower_wordsign",
+    "id": "lws_were",
+    "keywords": [
+      "were",
+      "wordsign",
+      "lower wordsign",
+      "grade 2",
+      "contraction"
+    ],
+    "fact": "Lower wordsign: 'were' = ⠶ (dots 2-3-5-6). Standing alone only. Uses only lower dots (dots 2-3-5-6). Subject to the lower sign rule: cannot be adjacent to punctuation that also uses only lower dots."
+  },
+  {
+    "type": "lower_wordsign",
+    "id": "lws_his",
+    "keywords": [
+      "his",
+      "wordsign",
+      "lower wordsign",
+      "grade 2",
+      "contraction"
+    ],
+    "fact": "Lower wordsign: 'his' = ⠦ (dots 2-3-6). Standing alone only. Uses only lower dots (dots 2-3-5-6). Subject to the lower sign rule: cannot be adjacent to punctuation that also uses only lower dots."
+  },
+  {
+    "type": "lower_wordsign",
+    "id": "lws_was",
+    "keywords": [
+      "was",
+      "wordsign",
+      "lower wordsign",
+      "grade 2",
+      "contraction"
+    ],
+    "fact": "Lower wordsign: 'was' = ⠴ (dots 3-5-6). Standing alone only. Uses only lower dots (dots 2-3-5-6). Subject to the lower sign rule: cannot be adjacent to punctuation that also uses only lower dots."
+  },
+  {
+    "type": "lower_wordsign",
+    "id": "lws_in",
+    "keywords": [
+      "in",
+      "wordsign",
+      "lower wordsign",
+      "grade 2",
+      "contraction"
+    ],
+    "fact": "Lower wordsign: 'in' = ⠔ (dots 3-5). Standing alone only. Uses only lower dots (dots 2-3-5-6). Subject to the lower sign rule: cannot be adjacent to punctuation that also uses only lower dots."
+  },
+  {
+    "type": "lower_groupsign",
+    "id": "lg_ea",
+    "keywords": [
+      "ea",
+      "groupsign",
+      "lower groupsign",
+      "grade 2"
+    ],
+    "fact": "Lower groupsign: 'ea' = ⠂ (dots 2). Used within words. Subject to bridging restrictions."
+  },
+  {
+    "type": "lower_groupsign",
+    "id": "lg_bb",
+    "keywords": [
+      "bb",
+      "groupsign",
+      "lower groupsign",
+      "grade 2"
+    ],
+    "fact": "Lower groupsign: 'bb' = ⠆ (dots 2-3). Used within words. Subject to bridging restrictions."
+  },
+  {
+    "type": "lower_groupsign",
+    "id": "lg_cc",
+    "keywords": [
+      "cc",
+      "groupsign",
+      "lower groupsign",
+      "grade 2"
+    ],
+    "fact": "Lower groupsign: 'cc' = ⠒ (dots 2-5). Used within words. Subject to bridging restrictions."
+  },
+  {
+    "type": "lower_groupsign",
+    "id": "lg_ff",
+    "keywords": [
+      "ff",
+      "groupsign",
+      "lower groupsign",
+      "grade 2"
+    ],
+    "fact": "Lower groupsign: 'ff' = ⠖ (dots 2-3-5). Used within words. Subject to bridging restrictions."
+  },
+  {
+    "type": "lower_groupsign",
+    "id": "lg_gg",
+    "keywords": [
+      "gg",
+      "groupsign",
+      "lower groupsign",
+      "grade 2"
+    ],
+    "fact": "Lower groupsign: 'gg' = ⠶ (dots 2-3-5-6). Used within words. Subject to bridging restrictions."
+  },
+  {
+    "type": "lower_groupsign",
+    "id": "lg_en",
+    "keywords": [
+      "en",
+      "groupsign",
+      "lower groupsign",
+      "grade 2"
+    ],
+    "fact": "Lower groupsign: 'en' = ⠢ (dots 2-6). Used within words. Subject to bridging restrictions."
+  },
+  {
+    "type": "lower_groupsign",
+    "id": "lg_in",
+    "keywords": [
+      "in",
+      "groupsign",
+      "lower groupsign",
+      "grade 2"
+    ],
+    "fact": "Lower groupsign: 'in' = ⠔ (dots 3-5). Used within words. Subject to bridging restrictions."
+  },
+  {
+    "type": "lower_groupsign",
+    "id": "lg_prefix_be",
+    "keywords": [
+      "be",
+      "prefix",
+      "groupsign",
+      "lower groupsign",
+      "grade 2"
+    ],
+    "fact": "Lower groupsign prefix: 'be' = ⠆ (dots 2-3). Used at the beginning of words as a contraction."
+  },
+  {
+    "type": "lower_groupsign",
+    "id": "lg_prefix_con",
+    "keywords": [
+      "con",
+      "prefix",
+      "groupsign",
+      "lower groupsign",
+      "grade 2"
+    ],
+    "fact": "Lower groupsign prefix: 'con' = ⠒ (dots 2-5). Used at the beginning of words as a contraction."
+  },
+  {
+    "type": "lower_groupsign",
+    "id": "lg_prefix_dis",
+    "keywords": [
+      "dis",
+      "prefix",
+      "groupsign",
+      "lower groupsign",
+      "grade 2"
+    ],
+    "fact": "Lower groupsign prefix: 'dis' = ⠲ (dots 2-5-6). Used at the beginning of words as a contraction."
+  },
+  {
+    "type": "initial_letter_contraction",
+    "id": "ilc_day",
+    "keywords": [
+      "day",
+      "initial-letter contraction",
+      "contraction",
+      "grade 2"
+    ],
+    "fact": "Initial-letter contraction: 'day' = ⠐⠙ (dot 5 + letter 'd'). Two-cell sign. Can represent the whole word or appear as part of a longer word."
+  },
+  {
+    "type": "initial_letter_contraction",
+    "id": "ilc_ever",
+    "keywords": [
+      "ever",
+      "initial-letter contraction",
+      "contraction",
+      "grade 2"
+    ],
+    "fact": "Initial-letter contraction: 'ever' = ⠐⠑ (dot 5 + letter 'e'). Two-cell sign. Can represent the whole word or appear as part of a longer word."
+  },
+  {
+    "type": "initial_letter_contraction",
+    "id": "ilc_father",
+    "keywords": [
+      "father",
+      "initial-letter contraction",
+      "contraction",
+      "grade 2"
+    ],
+    "fact": "Initial-letter contraction: 'father' = ⠐⠋ (dot 5 + letter 'f'). Two-cell sign. Can represent the whole word or appear as part of a longer word."
+  },
+  {
+    "type": "initial_letter_contraction",
+    "id": "ilc_here",
+    "keywords": [
+      "here",
+      "initial-letter contraction",
+      "contraction",
+      "grade 2"
+    ],
+    "fact": "Initial-letter contraction: 'here' = ⠐⠓ (dot 5 + letter 'h'). Two-cell sign. Can represent the whole word or appear as part of a longer word."
+  },
+  {
+    "type": "initial_letter_contraction",
+    "id": "ilc_know",
+    "keywords": [
+      "know",
+      "initial-letter contraction",
+      "contraction",
+      "grade 2"
+    ],
+    "fact": "Initial-letter contraction: 'know' = ⠐⠅ (dot 5 + letter 'k'). Two-cell sign. Can represent the whole word or appear as part of a longer word."
+  },
+  {
+    "type": "initial_letter_contraction",
+    "id": "ilc_lord",
+    "keywords": [
+      "lord",
+      "initial-letter contraction",
+      "contraction",
+      "grade 2"
+    ],
+    "fact": "Initial-letter contraction: 'lord' = ⠐⠇ (dot 5 + letter 'l'). Two-cell sign. Can represent the whole word or appear as part of a longer word."
+  },
+  {
+    "type": "initial_letter_contraction",
+    "id": "ilc_mother",
+    "keywords": [
+      "mother",
+      "initial-letter contraction",
+      "contraction",
+      "grade 2"
+    ],
+    "fact": "Initial-letter contraction: 'mother' = ⠐⠍ (dot 5 + letter 'm'). Two-cell sign. Can represent the whole word or appear as part of a longer word."
+  },
+  {
+    "type": "initial_letter_contraction",
+    "id": "ilc_name",
+    "keywords": [
+      "name",
+      "initial-letter contraction",
+      "contraction",
+      "grade 2"
+    ],
+    "fact": "Initial-letter contraction: 'name' = ⠐⠝ (dot 5 + letter 'n'). Two-cell sign. Can represent the whole word or appear as part of a longer word."
+  },
+  {
+    "type": "initial_letter_contraction",
+    "id": "ilc_one",
+    "keywords": [
+      "one",
+      "initial-letter contraction",
+      "contraction",
+      "grade 2"
+    ],
+    "fact": "Initial-letter contraction: 'one' = ⠐⠕ (dot 5 + letter 'o'). Two-cell sign. Can represent the whole word or appear as part of a longer word."
+  },
+  {
+    "type": "initial_letter_contraction",
+    "id": "ilc_part",
+    "keywords": [
+      "part",
+      "initial-letter contraction",
+      "contraction",
+      "grade 2"
+    ],
+    "fact": "Initial-letter contraction: 'part' = ⠐⠏ (dot 5 + letter 'p'). Two-cell sign. Can represent the whole word or appear as part of a longer word."
+  },
+  {
+    "type": "initial_letter_contraction",
+    "id": "ilc_question",
+    "keywords": [
+      "question",
+      "initial-letter contraction",
+      "contraction",
+      "grade 2"
+    ],
+    "fact": "Initial-letter contraction: 'question' = ⠐⠟ (dot 5 + letter 'q'). Two-cell sign. Can represent the whole word or appear as part of a longer word."
+  },
+  {
+    "type": "initial_letter_contraction",
+    "id": "ilc_right",
+    "keywords": [
+      "right",
+      "initial-letter contraction",
+      "contraction",
+      "grade 2"
+    ],
+    "fact": "Initial-letter contraction: 'right' = ⠐⠗ (dot 5 + letter 'r'). Two-cell sign. Can represent the whole word or appear as part of a longer word."
+  },
+  {
+    "type": "initial_letter_contraction",
+    "id": "ilc_some",
+    "keywords": [
+      "some",
+      "initial-letter contraction",
+      "contraction",
+      "grade 2"
+    ],
+    "fact": "Initial-letter contraction: 'some' = ⠐⠎ (dot 5 + letter 's'). Two-cell sign. Can represent the whole word or appear as part of a longer word."
+  },
+  {
+    "type": "initial_letter_contraction",
+    "id": "ilc_time",
+    "keywords": [
+      "time",
+      "initial-letter contraction",
+      "contraction",
+      "grade 2"
+    ],
+    "fact": "Initial-letter contraction: 'time' = ⠐⠞ (dot 5 + letter 't'). Two-cell sign. Can represent the whole word or appear as part of a longer word."
+  },
+  {
+    "type": "initial_letter_contraction",
+    "id": "ilc_under",
+    "keywords": [
+      "under",
+      "initial-letter contraction",
+      "contraction",
+      "grade 2"
+    ],
+    "fact": "Initial-letter contraction: 'under' = ⠐⠥ (dot 5 + letter 'u'). Two-cell sign. Can represent the whole word or appear as part of a longer word."
+  },
+  {
+    "type": "initial_letter_contraction",
+    "id": "ilc_young",
+    "keywords": [
+      "young",
+      "initial-letter contraction",
+      "contraction",
+      "grade 2"
+    ],
+    "fact": "Initial-letter contraction: 'young' = ⠐⠽ (dot 5 + letter 'y'). Two-cell sign. Can represent the whole word or appear as part of a longer word."
+  },
+  {
+    "type": "initial_letter_contraction",
+    "id": "ilc_there",
+    "keywords": [
+      "there",
+      "initial-letter contraction",
+      "contraction",
+      "grade 2"
+    ],
+    "fact": "Initial-letter contraction: 'there' = ⠐⠮ (dot 5 + 'the' groupsign). Two-cell sign. Can represent the whole word or appear as part of a longer word."
+  },
+  {
+    "type": "initial_letter_contraction",
+    "id": "ilc_character",
+    "keywords": [
+      "character",
+      "initial-letter contraction",
+      "contraction",
+      "grade 2"
+    ],
+    "fact": "Initial-letter contraction: 'character' = ⠐⠡ (dot 5 + 'ch' groupsign). Two-cell sign. Can represent the whole word or appear as part of a longer word."
+  },
+  {
+    "type": "initial_letter_contraction",
+    "id": "ilc_through",
+    "keywords": [
+      "through",
+      "initial-letter contraction",
+      "contraction",
+      "grade 2"
+    ],
+    "fact": "Initial-letter contraction: 'through' = ⠐⠹ (dot 5 + 'th' groupsign). Two-cell sign. Can represent the whole word or appear as part of a longer word."
+  },
+  {
+    "type": "initial_letter_contraction",
+    "id": "ilc_where",
+    "keywords": [
+      "where",
+      "initial-letter contraction",
+      "contraction",
+      "grade 2"
+    ],
+    "fact": "Initial-letter contraction: 'where' = ⠐⠱ (dot 5 + 'wh' groupsign). Two-cell sign. Can represent the whole word or appear as part of a longer word."
+  },
+  {
+    "type": "initial_letter_contraction",
+    "id": "ilc_ought",
+    "keywords": [
+      "ought",
+      "initial-letter contraction",
+      "contraction",
+      "grade 2"
+    ],
+    "fact": "Initial-letter contraction: 'ought' = ⠐⠳ (dot 5 + 'ou' groupsign). Two-cell sign. Can represent the whole word or appear as part of a longer word."
+  },
+  {
+    "type": "initial_letter_contraction",
+    "id": "ilc_work",
+    "keywords": [
+      "work",
+      "initial-letter contraction",
+      "contraction",
+      "grade 2"
+    ],
+    "fact": "Initial-letter contraction: 'work' = ⠐⠺ (dot 5 + letter 'w'). Two-cell sign. Can represent the whole word or appear as part of a longer word."
+  },
+  {
+    "type": "initial_letter_contraction",
+    "id": "ilc_upon",
+    "keywords": [
+      "upon",
+      "initial-letter contraction",
+      "contraction",
+      "grade 2"
+    ],
+    "fact": "Initial-letter contraction: 'upon' = ⠘⠥ (dots 4-5 + letter 'u'). Two-cell sign."
+  },
+  {
+    "type": "initial_letter_contraction",
+    "id": "ilc_word",
+    "keywords": [
+      "word",
+      "initial-letter contraction",
+      "contraction",
+      "grade 2"
+    ],
+    "fact": "Initial-letter contraction: 'word' = ⠘⠺ (dots 4-5 + letter 'w'). Two-cell sign."
+  },
+  {
+    "type": "initial_letter_contraction",
+    "id": "ilc_these",
+    "keywords": [
+      "these",
+      "initial-letter contraction",
+      "contraction",
+      "grade 2"
+    ],
+    "fact": "Initial-letter contraction: 'these' = ⠘⠮ (dots 4-5 + 'the' groupsign). Two-cell sign."
+  },
+  {
+    "type": "initial_letter_contraction",
+    "id": "ilc_those",
+    "keywords": [
+      "those",
+      "initial-letter contraction",
+      "contraction",
+      "grade 2"
+    ],
+    "fact": "Initial-letter contraction: 'those' = ⠘⠹ (dots 4-5 + 'th' groupsign). Two-cell sign."
+  },
+  {
+    "type": "initial_letter_contraction",
+    "id": "ilc_whose",
+    "keywords": [
+      "whose",
+      "initial-letter contraction",
+      "contraction",
+      "grade 2"
+    ],
+    "fact": "Initial-letter contraction: 'whose' = ⠘⠱ (dots 4-5 + 'wh' groupsign). Two-cell sign."
+  },
+  {
+    "type": "initial_letter_contraction",
+    "id": "ilc_cannot",
+    "keywords": [
+      "cannot",
+      "initial-letter contraction",
+      "contraction",
+      "grade 2"
+    ],
+    "fact": "Initial-letter contraction: 'cannot' = ⠸⠉ (dots 4-5-6 + letter 'c'). Two-cell sign."
+  },
+  {
+    "type": "initial_letter_contraction",
+    "id": "ilc_had",
+    "keywords": [
+      "had",
+      "initial-letter contraction",
+      "contraction",
+      "grade 2"
+    ],
+    "fact": "Initial-letter contraction: 'had' = ⠸⠓ (dots 4-5-6 + letter 'h'). Two-cell sign."
+  },
+  {
+    "type": "initial_letter_contraction",
+    "id": "ilc_many",
+    "keywords": [
+      "many",
+      "initial-letter contraction",
+      "contraction",
+      "grade 2"
+    ],
+    "fact": "Initial-letter contraction: 'many' = ⠸⠍ (dots 4-5-6 + letter 'm'). Two-cell sign."
+  },
+  {
+    "type": "initial_letter_contraction",
+    "id": "ilc_spirit",
+    "keywords": [
+      "spirit",
+      "initial-letter contraction",
+      "contraction",
+      "grade 2"
+    ],
+    "fact": "Initial-letter contraction: 'spirit' = ⠸⠎ (dots 4-5-6 + letter 's'). Two-cell sign."
+  },
+  {
+    "type": "initial_letter_contraction",
+    "id": "ilc_world",
+    "keywords": [
+      "world",
+      "initial-letter contraction",
+      "contraction",
+      "grade 2"
+    ],
+    "fact": "Initial-letter contraction: 'world' = ⠸⠺ (dots 4-5-6 + letter 'w'). Two-cell sign."
+  },
+  {
+    "type": "initial_letter_contraction",
+    "id": "ilc_their",
+    "keywords": [
+      "their",
+      "initial-letter contraction",
+      "contraction",
+      "grade 2"
+    ],
+    "fact": "Initial-letter contraction: 'their' = ⠸⠮ (dots 4-5-6 + 'the' groupsign). Two-cell sign."
+  },
+  {
+    "type": "final_letter_groupsign",
+    "id": "flg_ound",
+    "keywords": [
+      "ound",
+      "final-letter groupsign",
+      "groupsign",
+      "grade 2",
+      "suffix"
+    ],
+    "fact": "Final-letter groupsign: '-ound' = ⠨⠙ (dots 4-6 + dots 1-4-5). Used at the end of words."
+  },
+  {
+    "type": "final_letter_groupsign",
+    "id": "flg_ance",
+    "keywords": [
+      "ance",
+      "final-letter groupsign",
+      "groupsign",
+      "grade 2",
+      "suffix"
+    ],
+    "fact": "Final-letter groupsign: '-ance' = ⠨⠑ (dots 4-6 + dots 1-5). Used at the end of words."
+  },
+  {
+    "type": "final_letter_groupsign",
+    "id": "flg_sion",
+    "keywords": [
+      "sion",
+      "final-letter groupsign",
+      "groupsign",
+      "grade 2",
+      "suffix"
+    ],
+    "fact": "Final-letter groupsign: '-sion' = ⠨⠝ (dots 4-6 + dots 1-3-4-5). Used at the end of words."
+  },
+  {
+    "type": "final_letter_groupsign",
+    "id": "flg_less",
+    "keywords": [
+      "less",
+      "final-letter groupsign",
+      "groupsign",
+      "grade 2",
+      "suffix"
+    ],
+    "fact": "Final-letter groupsign: '-less' = ⠨⠎ (dots 4-6 + dots 2-3-4). Used at the end of words."
+  },
+  {
+    "type": "final_letter_groupsign",
+    "id": "flg_ount",
+    "keywords": [
+      "ount",
+      "final-letter groupsign",
+      "groupsign",
+      "grade 2",
+      "suffix"
+    ],
+    "fact": "Final-letter groupsign: '-ount' = ⠨⠞ (dots 4-6 + dots 2-3-4-5). Used at the end of words."
+  },
+  {
+    "type": "final_letter_groupsign",
+    "id": "flg_ence",
+    "keywords": [
+      "ence",
+      "final-letter groupsign",
+      "groupsign",
+      "grade 2",
+      "suffix"
+    ],
+    "fact": "Final-letter groupsign: '-ence' = ⠰⠑ (dots 5-6 + dots 1-5). Used at the end of words."
+  },
+  {
+    "type": "final_letter_groupsign",
+    "id": "flg_ong",
+    "keywords": [
+      "ong",
+      "final-letter groupsign",
+      "groupsign",
+      "grade 2",
+      "suffix"
+    ],
+    "fact": "Final-letter groupsign: '-ong' = ⠰⠛ (dots 5-6 + dots 1-2-4-5). Used at the end of words."
+  },
+  {
+    "type": "final_letter_groupsign",
+    "id": "flg_ful",
+    "keywords": [
+      "ful",
+      "final-letter groupsign",
+      "groupsign",
+      "grade 2",
+      "suffix"
+    ],
+    "fact": "Final-letter groupsign: '-ful' = ⠰⠇ (dots 5-6 + dots 1-2-3). Used at the end of words."
+  },
+  {
+    "type": "final_letter_groupsign",
+    "id": "flg_tion",
+    "keywords": [
+      "tion",
+      "final-letter groupsign",
+      "groupsign",
+      "grade 2",
+      "suffix"
+    ],
+    "fact": "Final-letter groupsign: '-tion' = ⠰⠝ (dots 5-6 + dots 1-3-4-5). Used at the end of words."
+  },
+  {
+    "type": "final_letter_groupsign",
+    "id": "flg_ness",
+    "keywords": [
+      "ness",
+      "final-letter groupsign",
+      "groupsign",
+      "grade 2",
+      "suffix"
+    ],
+    "fact": "Final-letter groupsign: '-ness' = ⠰⠎ (dots 5-6 + dots 2-3-4). Used at the end of words."
+  },
+  {
+    "type": "final_letter_groupsign",
+    "id": "flg_ment",
+    "keywords": [
+      "ment",
+      "final-letter groupsign",
+      "groupsign",
+      "grade 2",
+      "suffix"
+    ],
+    "fact": "Final-letter groupsign: '-ment' = ⠰⠞ (dots 5-6 + dots 2-3-4-5). Used at the end of words."
+  },
+  {
+    "type": "final_letter_groupsign",
+    "id": "flg_ity",
+    "keywords": [
+      "ity",
+      "final-letter groupsign",
+      "groupsign",
+      "grade 2",
+      "suffix"
+    ],
+    "fact": "Final-letter groupsign: '-ity' = ⠰⠽ (dots 5-6 + dots 1-3-4-5-6). Used at the end of words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_about",
+    "keywords": [
+      "about",
+      "ab",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'about' is written as 'ab' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_above",
+    "keywords": [
+      "above",
+      "abv",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'above' is written as 'abv' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_according",
+    "keywords": [
+      "according",
+      "ac",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'according' is written as 'ac' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_across",
+    "keywords": [
+      "across",
+      "acr",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'across' is written as 'acr' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_after",
+    "keywords": [
+      "after",
+      "af",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'after' is written as 'af' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_afternoon",
+    "keywords": [
+      "afternoon",
+      "afn",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'afternoon' is written as 'afn' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_afterward",
+    "keywords": [
+      "afterward",
+      "afw",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'afterward' is written as 'afw' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_again",
+    "keywords": [
+      "again",
+      "ag",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'again' is written as 'ag' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_almost",
+    "keywords": [
+      "almost",
+      "alm",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'almost' is written as 'alm' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_already",
+    "keywords": [
+      "already",
+      "alr",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'already' is written as 'alr' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_also",
+    "keywords": [
+      "also",
+      "al",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'also' is written as 'al' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_altogether",
+    "keywords": [
+      "altogether",
+      "alt",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'altogether' is written as 'alt' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_always",
+    "keywords": [
+      "always",
+      "alw",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'always' is written as 'alw' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_blind",
+    "keywords": [
+      "blind",
+      "bl",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'blind' is written as 'bl' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_braille",
+    "keywords": [
+      "braille",
+      "brl",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'braille' is written as 'brl' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_children",
+    "keywords": [
+      "children",
+      "chn",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'children' is written as 'chn' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_could",
+    "keywords": [
+      "could",
+      "cd",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'could' is written as 'cd' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_deceive",
+    "keywords": [
+      "deceive",
+      "dcv",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'deceive' is written as 'dcv' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_declare",
+    "keywords": [
+      "declare",
+      "dcl",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'declare' is written as 'dcl' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_either",
+    "keywords": [
+      "either",
+      "ei",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'either' is written as 'ei' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_first",
+    "keywords": [
+      "first",
+      "fst",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'first' is written as 'fst' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_friend",
+    "keywords": [
+      "friend",
+      "fr",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'friend' is written as 'fr' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_good",
+    "keywords": [
+      "good",
+      "gd",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'good' is written as 'gd' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_great",
+    "keywords": [
+      "great",
+      "grt",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'great' is written as 'grt' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_him",
+    "keywords": [
+      "him",
+      "hm",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'him' is written as 'hm' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_himself",
+    "keywords": [
+      "himself",
+      "hmf",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'himself' is written as 'hmf' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_immediate",
+    "keywords": [
+      "immediate",
+      "imm",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'immediate' is written as 'imm' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_its",
+    "keywords": [
+      "its",
+      "xs",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'its' is written as 'xs' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_itself",
+    "keywords": [
+      "itself",
+      "xf",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'itself' is written as 'xf' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_letter",
+    "keywords": [
+      "letter",
+      "lr",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'letter' is written as 'lr' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_little",
+    "keywords": [
+      "little",
+      "ll",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'little' is written as 'll' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_much",
+    "keywords": [
+      "much",
+      "mch",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'much' is written as 'mch' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_must",
+    "keywords": [
+      "must",
+      "mst",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'must' is written as 'mst' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_myself",
+    "keywords": [
+      "myself",
+      "myf",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'myself' is written as 'myf' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_necessary",
+    "keywords": [
+      "necessary",
+      "nec",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'necessary' is written as 'nec' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_neither",
+    "keywords": [
+      "neither",
+      "nei",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'neither' is written as 'nei' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_paid",
+    "keywords": [
+      "paid",
+      "pd",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'paid' is written as 'pd' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_perhaps",
+    "keywords": [
+      "perhaps",
+      "prh",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'perhaps' is written as 'prh' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_quick",
+    "keywords": [
+      "quick",
+      "qk",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'quick' is written as 'qk' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_receive",
+    "keywords": [
+      "receive",
+      "rcv",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'receive' is written as 'rcv' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_rejoice",
+    "keywords": [
+      "rejoice",
+      "rjc",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'rejoice' is written as 'rjc' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_said",
+    "keywords": [
+      "said",
+      "sd",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'said' is written as 'sd' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_such",
+    "keywords": [
+      "such",
+      "sch",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'such' is written as 'sch' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_today",
+    "keywords": [
+      "today",
+      "td",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'today' is written as 'td' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_together",
+    "keywords": [
+      "together",
+      "tgr",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'together' is written as 'tgr' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_tomorrow",
+    "keywords": [
+      "tomorrow",
+      "tm",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'tomorrow' is written as 'tm' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_tonight",
+    "keywords": [
+      "tonight",
+      "tn",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'tonight' is written as 'tn' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_would",
+    "keywords": [
+      "would",
+      "wd",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'would' is written as 'wd' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_your",
+    "keywords": [
+      "your",
+      "yr",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'your' is written as 'yr' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_yourself",
+    "keywords": [
+      "yourself",
+      "yrf",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'yourself' is written as 'yrf' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "shortform",
+    "id": "sf_yourselves",
+    "keywords": [
+      "yourselves",
+      "yrvs",
+      "shortform",
+      "grade 2",
+      "abbreviation"
+    ],
+    "fact": "Shortform: 'yourselves' is written as 'yrvs' in Grade 2 braille. Shortforms are abbreviated spellings that save space. They can be used as whole words and within compound words."
+  },
+  {
+    "type": "concept",
+    "id": "braille_cell",
+    "keywords": [
+      "cell",
+      "braille cell",
+      "dots",
+      "how many dots",
+      "6 dots",
+      "8 dots",
+      "dot positions"
+    ],
+    "fact": "A standard braille cell has 6 dots arranged in a 2x3 grid. Dots are numbered: dot 1 (top-left), dot 2 (middle-left), dot 3 (bottom-left), dot 4 (top-right), dot 5 (middle-right), dot 6 (bottom-right). Computer braille (8-dot) adds dot 7 (below dot 3) and dot 8 (below dot 6), giving 256 possible patterns. Standard 6-dot braille has 64 possible patterns (including the blank cell)."
+  },
+  {
+    "type": "concept",
+    "id": "grade_1_vs_2",
+    "keywords": [
+      "grade 1",
+      "grade 2",
+      "uncontracted",
+      "contracted",
+      "difference",
+      "grades"
+    ],
+    "fact": "Grade 1 (uncontracted) braille spells every word letter by letter. Grade 2 (contracted) braille uses ~200 contractions and shortforms to reduce the number of cells. Grade 2 is standard for published English braille. Grade 1 is used for beginners, technical notation, and when contractions would be ambiguous."
+  },
+  {
+    "type": "concept",
+    "id": "louis_braille",
+    "keywords": [
+      "Louis Braille",
+      "inventor",
+      "history",
+      "invented",
+      "who invented",
+      "origin"
+    ],
+    "fact": "Louis Braille invented the braille system in 1824 at age 15 while a student at the Royal Institute for Blind Youth in Paris. He adapted Charles Barbier's 12-dot 'night writing' military code into a 6-dot system. Braille lost his sight at age 3 from an accident in his father's leather workshop. The system was not officially adopted in France until 1854, two years after his death."
+  },
+  {
+    "type": "concept",
+    "id": "ueb",
+    "keywords": [
+      "UEB",
+      "Unified English Braille",
+      "standard",
+      "what is UEB"
+    ],
+    "fact": "Unified English Braille (UEB) is the standard braille code for English, adopted in 2004-2013 across English-speaking countries. It replaced older national codes (BAUK, BANA) with a single unified system. UEB handles literary text, math, and technical notation within one code. The definitive reference is 'The Rules of Unified English Braille' published by ICEB (International Council on English Braille)."
+  },
+  {
+    "type": "concept",
+    "id": "standing_alone",
+    "keywords": [
+      "standing alone",
+      "wordsign rule",
+      "when to use wordsign"
+    ],
+    "fact": "In UEB, a wordsign can only be used when the word 'stands alone' -- meaning it is surrounded by spaces, punctuation, or the start/end of text. An apostrophe followed by common suffixes ('d, 'll, 're, 's, 't, 've) is also allowed. For example, the wordsign for 'but' (letter b) can be used in 'but' and 'but's' but NOT in 'butter' (where b-u-t-t-er would be spelled out or use groupsigns)."
+  },
+  {
+    "type": "concept",
+    "id": "lower_sign_rule",
+    "keywords": [
+      "lower sign rule",
+      "lower dots",
+      "lower wordsign",
+      "lower groupsign"
+    ],
+    "fact": "The lower sign rule: lower wordsigns (be, enough, were, his, was, in) use only dots in the lower half of the cell (dots 2,3,5,6). They must NOT be placed adjacent to punctuation that also uses only lower dots (like comma, semicolon), because the reader couldn't tell where the punctuation ends and the wordsign begins."
+  },
+  {
+    "type": "concept",
+    "id": "contraction_types",
+    "keywords": [
+      "types of contractions",
+      "contraction categories",
+      "how many contractions"
+    ],
+    "fact": "UEB Grade 2 has these contraction categories: (1) 23 alphabetic wordsigns -- single letters represent whole words. (2) 6 strong wordsigns -- unique cells for child, shall, this, which, out, still. (3) 5 strong contractions -- and, for, of, the, with -- usable anywhere. (4) 12 strong groupsigns -- ch, sh, th, wh, ed, er, ou, ow, st, ar, ing, gh. (5) 6 lower wordsigns. (6) 10 lower groupsigns. (7) 33 initial-letter contractions. (8) 12 final-letter groupsigns. (9) 75 shortforms. Total: ~200 contractions."
+  },
+  {
+    "type": "concept",
+    "id": "aspirated_h",
+    "keywords": [
+      "aspirated h",
+      "bridging",
+      "mishap",
+      "sh rule",
+      "th rule"
+    ],
+    "fact": "Bridging restriction: groupsigns sh, th, ch, wh, gh must not bridge across a syllable boundary when the h starts the second syllable (aspirated h). For example: 'mishap' = m-i-s-h-a-p (NOT mi-sh-ap), 'pothole' = p-o-t-h-o-l-e (NOT po-th-ole). This is because the h belongs to the second syllable."
+  },
+  {
+    "type": "concept",
+    "id": "braille_display",
+    "keywords": [
+      "braille display",
+      "refreshable",
+      "braille reader",
+      "hardware"
+    ],
+    "fact": "A refreshable braille display is a device that renders braille characters using pins that raise and lower. Displays range from 14 to 80 cells. They connect to computers and phones via USB or Bluetooth. Contractions (Grade 2) reduce cells by 20-50%, which is significant when a display only shows 20-40 cells at a time."
+  },
+  {
+    "type": "concept",
+    "id": "reading_direction",
+    "keywords": [
+      "reading direction",
+      "left to right",
+      "how to read"
+    ],
+    "fact": "Braille is read left to right, like print English. Fingers move across the line. Each cell is felt as a pattern of raised dots. Experienced braille readers can read 100-200 words per minute. Reading uses mainly the index fingers, with other fingers used for tracking the line."
+  },
+  {
+    "type": "comparison",
+    "id": "compare_d_f",
+    "keywords": [
+      "d",
+      "f",
+      "difference between d and f",
+      "d vs f",
+      "difference",
+      "compare",
+      "confusion"
+    ],
+    "fact": "Comparing 'd' (⠙, dots 1-4-5) and 'f' (⠋, dots 1-2-4): d is dots 1-4-5, f is dots 1-2-4. Both share dots 1 and 4, but d has dot 5 (middle-right) while f has dot 2 (middle-left)."
+  },
+  {
+    "type": "comparison",
+    "id": "compare_e_i",
+    "keywords": [
+      "e",
+      "i",
+      "difference between e and i",
+      "e vs i",
+      "difference",
+      "compare",
+      "confusion"
+    ],
+    "fact": "Comparing 'e' (⠑, dots 1-5) and 'i' (⠊, dots 2-4): e is dots 1-5 (top-left + middle-right), i is dots 2-4 (middle-left + top-right). They are mirror images of each other."
+  },
+  {
+    "type": "comparison",
+    "id": "compare_h_j",
+    "keywords": [
+      "h",
+      "j",
+      "difference between h and j",
+      "h vs j",
+      "difference",
+      "compare",
+      "confusion"
+    ],
+    "fact": "Comparing 'h' (⠓, dots 1-2-5) and 'j' (⠚, dots 2-4-5): h is dots 1-2-5, j is dots 2-4-5. h has dot 1 (top-left), j has dot 4 (top-right)."
+  },
+  {
+    "type": "comparison",
+    "id": "compare_d_n",
+    "keywords": [
+      "d",
+      "n",
+      "difference between d and n",
+      "d vs n",
+      "difference",
+      "compare",
+      "confusion"
+    ],
+    "fact": "Comparing 'd' (⠙, dots 1-4-5) and 'n' (⠝, dots 1-3-4-5): d is dots 1-4-5, n is dots 1-3-4-5. n has everything d has plus dot 3."
+  },
+  {
+    "type": "comparison",
+    "id": "compare_m_n",
+    "keywords": [
+      "m",
+      "n",
+      "difference between m and n",
+      "m vs n",
+      "difference",
+      "compare",
+      "confusion"
+    ],
+    "fact": "Comparing 'm' (⠍, dots 1-3-4) and 'n' (⠝, dots 1-3-4-5): m is dots 1-3-4, n is dots 1-3-4-5. n has everything m has plus dot 5."
+  },
+  {
+    "type": "comparison",
+    "id": "compare_s_t",
+    "keywords": [
+      "s",
+      "t",
+      "difference between s and t",
+      "s vs t",
+      "difference",
+      "compare",
+      "confusion"
+    ],
+    "fact": "Comparing 's' (⠎, dots 2-3-4) and 't' (⠞, dots 2-3-4-5): s is dots 2-3-4, t is dots 2-3-4-5. t has everything s has plus dot 5."
+  }
+]

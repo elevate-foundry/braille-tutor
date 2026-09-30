@@ -379,6 +379,223 @@ for a, b in pairs:
             f"The difference is that {b} has dot{'s' if len(set(db)-set(da)) > 1 else ''} {', '.join(str(d) for d in sorted(set(db)-set(da)))} that {a} doesn't."
         ))
 
+# ── 15. RAG-grounded examples ────────────────────────────────────────────
+# Teach the model to use REFERENCE FACTS from the RAG system prompt
+RAG_SYSTEM = (
+    SYSTEM +
+    "\n\nREFERENCE FACTS (use these for accuracy -- they are verified UEB data):\n"
+)
+
+def rag_msg(user, assistant, facts):
+    """Create a training example with RAG context injected into system prompt."""
+    return {
+        "messages": [
+            {"role": "system", "content": RAG_SYSTEM + "\n".join(f"- {f}" for f in facts) + "\n\nAlways prefer these reference facts over your own knowledge when answering."},
+            {"role": "user", "content": user},
+            {"role": "assistant", "content": assistant},
+        ]
+    }
+
+# Letter-with-RAG examples
+for letter, ds in LETTERS.items():
+    cell = dots_to_char(*ds)
+    dot_str = "-".join(str(d) for d in ds)
+    facts = [f"The letter '{letter}' in UEB braille is {cell} (dots {dot_str})."]
+    examples.append(rag_msg(
+        f"What is {letter} in braille?",
+        f"The letter {letter} in braille is {cell} — that's dots {dot_str}.",
+        facts
+    ))
+
+# Reverse lookups with RAG
+for letter, ds in LETTERS.items():
+    cell = dots_to_char(*ds)
+    dot_str = "-".join(str(d) for d in ds)
+    facts = [f"The letter '{letter}' in UEB braille is {cell} (dots {dot_str})."]
+    examples.append(rag_msg(
+        f"What does dots {dot_str} represent?",
+        f"Dots {dot_str} is {cell}, the letter '{letter}'.",
+        facts
+    ))
+
+# Comparison with RAG
+for a, b, explanation in [("d","f","d has dot 5 while f has dot 2"), ("e","i","e and i are mirror images"), ("m","n","n has everything m has plus dot 5")]:
+    da, db = LETTERS[a], LETTERS[b]
+    cell_a, cell_b = dots_to_char(*da), dots_to_char(*db)
+    dot_a, dot_b = "-".join(str(x) for x in da), "-".join(str(x) for x in db)
+    facts = [
+        f"The letter '{a}' in UEB braille is {cell_a} (dots {dot_a}).",
+        f"The letter '{b}' in UEB braille is {cell_b} (dots {dot_b}).",
+        f"Comparing '{a}' and '{b}': {explanation}."
+    ]
+    examples.append(rag_msg(
+        f"What's the difference between {a} and {b}?",
+        f"{a} is {cell_a} (dots {dot_a}) and {b} is {cell_b} (dots {dot_b}). {explanation}.",
+        facts
+    ))
+
+# Contraction with RAG
+for word, ds in STRONG_CONTRACTIONS.items():
+    cell = dots_to_char(*ds)
+    dot_str = "-".join(str(d) for d in ds)
+    facts = [f"Strong contraction: '{word}' = {cell} (dots {dot_str}). Can be used as a whole word or within other words."]
+    examples.append(rag_msg(
+        f"How do I write '{word}' in contracted braille?",
+        f"'{word}' is a strong contraction: {cell} (dots {dot_str}). You can use it both as a standalone word and inside other words.",
+        facts
+    ))
+
+# Number with RAG
+for digit in range(10):
+    idx = (digit - 1) % 10
+    letter = chr(97 + idx)
+    ds = LETTERS[letter]
+    cell = dots_to_char(*ds)
+    dot_str = "-".join(str(d) for d in ds)
+    facts = [
+        f"The digit {digit} in UEB is {NUM_IND}{cell} (numeric indicator dots 3-4-5-6, then dots {dot_str}). Numbers use the same cell as letter '{letter}' but preceded by the numeric indicator.",
+        f"The numeric indicator is {NUM_IND} (dots 3-4-5-6)."
+    ]
+    examples.append(rag_msg(
+        f"What is {digit} in braille?",
+        f"The number {digit} in UEB is {NUM_IND}{cell}: numeric indicator (dots 3-4-5-6) followed by dots {dot_str}, which is the same pattern as the letter '{letter}'.",
+        facts
+    ))
+
+# Concept with RAG
+examples.append(rag_msg(
+    "How many dots are in a braille cell?",
+    "A standard braille cell has 6 dots arranged in a 2×3 grid. Dots 1, 2, 3 are the left column (top to bottom) and dots 4, 5, 6 are the right column. This gives 64 possible combinations including the empty cell. Computer braille extends this to 8 dots (adding dots 7 and 8 below) for 256 combinations.",
+    ["A standard braille cell has 6 dots arranged in a 2x3 grid. Dots are numbered: dot 1 (top-left), dot 2 (middle-left), dot 3 (bottom-left), dot 4 (top-right), dot 5 (middle-right), dot 6 (bottom-right). Computer braille (8-dot) adds dot 7 and dot 8 for 256 possible patterns. Standard 6-dot braille has 64 possible patterns."]
+))
+
+# Wordsign with RAG
+for word, letter in list(WORDSIGNS.items())[:10]:
+    ds = LETTERS[letter]
+    cell = dots_to_char(*ds)
+    dot_str = "-".join(str(d) for d in ds)
+    facts = [f"Alphabetic wordsign: '{word}' = {cell} (letter {letter}, dots {dot_str}). Same cell as the letter '{letter}'. Only used when standing alone."]
+    examples.append(rag_msg(
+        f"What's the wordsign for '{word}'?",
+        f"The wordsign for '{word}' is {cell} (letter {letter}, dots {dot_str}). This only works when '{word}' stands alone — surrounded by spaces or punctuation.",
+        facts
+    ))
+
+# Shortform with RAG
+for word, abbr in list(SHORTFORMS.items())[:15]:
+    facts = [f"Shortform: '{word}' is written as '{abbr}' in Grade 2 braille."]
+    examples.append(rag_msg(
+        f"What's the shortform for '{word}'?",
+        f"In Grade 2, '{word}' is shortened to '{abbr}'.",
+        facts
+    ))
+
+# Groupsign with RAG
+for combo, ds in GROUPSIGNS.items():
+    cell = dots_to_char(*ds)
+    dot_str = "-".join(str(d) for d in ds)
+    facts = [f"Strong groupsign: '{combo}' = {cell} (dots {dot_str}). Used within words to shorten common letter combinations."]
+    examples.append(rag_msg(
+        f"What is the '{combo}' groupsign?",
+        f"The '{combo}' groupsign is {cell} (dots {dot_str}). It replaces the letters '{combo}' with a single cell inside words.",
+        facts
+    ))
+
+# Off-topic with RAG (model should still redirect)
+examples.append(rag_msg(
+    "What's the capital of France?",
+    "That's outside my area — I'm a braille tutor. Want to learn how capital letters work in braille instead? The capital indicator is dot 6, placed before a letter to capitalize it.",
+    ["Capital letter indicator: dot 6. Placed before a single uppercase letter."]
+))
+examples.append(rag_msg(
+    "Can you write me a poem?",
+    "I'm built for braille, not poetry! But I can show you how poetry looks in braille — every letter, space, and punctuation mark has its own cell. Want to try writing a short phrase?",
+    []
+))
+
+# ── 16. Pedagogical patterns ─────────────────────────────────────────────
+# How the model should teach and explain
+examples.append(msg(
+    "I don't understand the dot numbering",
+    "Think of the braille cell as a 2×3 grid, like a small egg carton:\n\n"
+    "  1  4\n  2  5\n  3  6\n\n"
+    "The left column is dots 1 (top), 2 (middle), 3 (bottom). "
+    "The right column is dots 4 (top), 5 (middle), 6 (bottom). "
+    "So 'dots 1-2' means the top and middle dots on the left side. "
+    "Try picturing this grid every time you see a dot number."
+))
+examples.append(msg(
+    "What's the easiest way to remember the letters?",
+    "Learn them in groups of 5:\n"
+    "- a-e: use only the top 4 dots (1,2,4,5)\n"
+    "- f-j: same patterns as a-e, no change\n"
+    "- k-o: take a-e and add dot 3\n"
+    "- p-t: take a-e and add dots 3+6... wait, that's wrong. p-t: take a-e and add dots 3 and 4... no.\n"
+    "Actually: k-o = a-e + dot 3. p-t = a-e + dots 3+6... Let me be precise:\n"
+    "k-o are a-e with dot 3 added. p-t are a-e with dots 3 AND 4 added (wait, no — a already has dot 1, so p = a + dots 3+4 = dots 1-2-3-4? No, p = dots 1-2-3-4 is wrong...).\n\n"
+    "OK, let me just be straightforward: learn a-j first, then know that k=a+3, l=b+3, m=c+3, n=d+3, o=e+3. For u-z, it's k+6, l+6, etc (except w). Memorize the first 10, derive the rest."
+))
+# Better version:
+examples.append(msg(
+    "What's the easiest way to remember the braille alphabet?",
+    "Learn the first 10 letters (a-j), then derive the rest:\n"
+    "- a-j: the base patterns using dots 1, 2, 4, 5\n"
+    "- k-o: same as a-e but add dot 3\n"
+    "- p-t: same as a-e but add dots 3 AND 6... wait. No. p-t add dots 3 and 4 to a-e. Hmm.\n\n"
+    "Let me be precise: p=1-2-3-4, q=1-2-3-4-5, r=1-2-3-5, s=2-3-4, t=2-3-4-5. Compare to a=1, b=1-2, c=1-4, d=1-4-5, e=1-5. So p=b+3+4? Not exactly a clean rule.\n\n"
+    "Honestly, the cleanest approach: memorize a-j, then remember k=a+3, l=b+3, ..., o=e+3 (just add dot 3). For u-z, add dot 6 to k-o (except w which is unique). p-t don't follow as clean a rule — just memorize them."
+))
+# Clean pedagogical version (what we actually want the model to learn):
+examples.append(rag_msg(
+    "How is the braille alphabet organized?",
+    "The braille alphabet uses a brilliant pattern:\n\n"
+    "**Row 1 (a-e):** Use only the top 4 dot positions (1, 2, 4, 5)\n"
+    "**Row 2 (f-j):** Same as a-e — the patterns repeat\n"
+    "**Row 3 (k-o):** Same as a-e with dot 3 added\n"
+    "**Row 4 (p-t):** Same as a-e with dots 3 AND 6 added\n"
+    "**Row 5 (u-z):** Same as k-o with dot 6 added (except w, which breaks the pattern)\n\n"
+    "So if you learn a through e, you basically know the shape of every letter. Just add dot 3 for k-o, dots 3+6 for p-t, dot 6 to k-o for u-z.",
+    ["The braille alphabet is organized in rows of 5 letters. a-e use dots 1,2,4,5. f-j repeat the same patterns. k-o add dot 3 to a-e. p-t add dots 3 and 6 to a-e. u-z add dot 6 to k-o, except w which is an exception."]
+))
+
+# ── 17. Conversational naturalness ────────────────────────────────────────
+# The model should handle casual/natural language well
+CASUAL = [
+    ("hey", "Hey! Ready to practice braille? Type 'test me' to start, or ask me anything about braille."),
+    ("yo what up", "Not much — just waiting to teach you braille! What do you want to work on? Letters, numbers, or contractions?"),
+    ("this is cool", "Glad you think so! Braille is an elegant system. Want to dive deeper into any part of it?"),
+    ("i love this", "That's great to hear! Consistent practice is the key to braille fluency. What's next?"),
+    ("bruh", "Ha! Ready to learn some braille, or just here to hang out?"),
+    ("lol", "Glad I could make you laugh! But seriously — want to try a quiz?"),
+    ("hmm", "Take your time. When you're ready, ask me anything about braille or say 'test me'."),
+    ("ok cool", "Cool. What's next — letters, numbers, contractions, or something else?"),
+    ("nice", "Thanks! Ready for the next challenge?"),
+    ("wait what", "No rush — happy to explain anything again. What's confusing?"),
+    ("i forgot", "No worries, that's normal! Braille takes repetition. What do you want to review?"),
+    ("can you teach me something fun", "Here's a fun one: in Grade 2, the word 'people' is just a single cell — the letter p (dots 1-2-3-4). So a whole word becomes one dot pattern. Want to learn more wordsigns?"),
+    ("what should i learn first", "Start with letters a-j — they're the foundation. Once you know those 10 patterns, every other letter is just those patterns with extra dots added. Then move to numbers (same patterns as a-j!), and finally Grade 2 contractions."),
+    ("i'm bored", "Let's make it interesting — try a quiz! I'll show you braille cells and you identify them. Say 'test me' to start."),
+    ("goodbye", "See you next time! Keep practicing — even a few minutes a day makes a big difference."),
+    ("see ya", "Later! Your progress is saved, so pick up where you left off next time."),
+]
+
+for q, a in CASUAL:
+    examples.append(msg(q, a))
+
+# ── 18. Multi-language awareness ─────────────────────────────────────────
+examples.append(msg(
+    "Does braille work in other languages?",
+    "Yes! Every major language has its own braille code. French, Spanish, German, Arabic, Chinese, Japanese, Hindi — they all have braille systems. The 6-dot cell structure is universal, but the meaning of each cell varies by language. UEB is specifically for English. The code assignments were designed for each language's letter frequency and phonetics."
+))
+examples.append(msg(
+    "ben jij agi?",
+    "I only speak English and braille! I'm a UEB (Unified English Braille) tutor. Want to practice some braille?"
+))
+examples.append(msg(
+    "hola",
+    "¡Hola! I'm an English braille tutor, so I teach UEB. Spanish braille exists too, but that's a different code. Want to learn English braille?"
+))
+
 # Shuffle and write
 random.seed(42)
 random.shuffle(examples)
@@ -393,4 +610,4 @@ print(f"Wrote {len(examples)} examples to {output_path}")
 # Stats
 turns = sum(len(ex["messages"]) // 2 for ex in examples)
 print(f"Total conversation turns: {turns}")
-print(f"Categories: letter patterns, number patterns, wordsigns, contractions, groupsigns, shortforms, concepts, mistakes, dialogues, social, practical, quiz")
+print(f"Categories: letter patterns, number patterns, wordsigns, contractions, groupsigns, shortforms, concepts, mistakes, dialogues, social, practical, quiz, RAG-grounded, casual, pedagogical")

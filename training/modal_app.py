@@ -44,6 +44,7 @@ serve_image = (
         "sentencepiece",
         "fastapi[standard]",
     )
+    .add_local_file("ueb_knowledge.json", "/root/ueb_knowledge.json")
 )
 
 
@@ -174,12 +175,22 @@ class BrailleTutor:
 
     @modal.enter()
     def load(self):
-        import os
+        import os, json
         os.environ["HF_HOME"] = "/hf-cache"
 
         from transformers import AutoTokenizer, AutoModelForCausalLM
         from peft import PeftModel
         import torch
+
+        # Load RAG knowledge base
+        kb_path = "/root/ueb_knowledge.json"
+        if os.path.exists(kb_path):
+            with open(kb_path) as f:
+                self.kb = json.load(f)
+            print(f"Loaded {len(self.kb)} RAG knowledge entries")
+        else:
+            self.kb = []
+            print("WARNING: No knowledge base found")
 
         adapter_path = "/adapters/braille-tutor-lora"
         print(f"Loading base model {self.model_name}...")
@@ -203,6 +214,66 @@ class BrailleTutor:
 
         self.model.eval()
         print("Model loaded and ready")
+
+    def retrieve(self, query: str, top_k: int = 8) -> str:
+        """Keyword-based RAG retrieval from the UEB knowledge base."""
+        import re
+        query_lower = query.lower()
+        # Extract meaningful tokens (ignore very short ones)
+        tokens = set(re.findall(r'\b[a-z]{2,}\b', query_lower))
+        # Also grab single letters if the query asks about them
+        single_letters = set(re.findall(r'\bletter\s+([a-z])\b', query_lower))
+        single_letters |= set(re.findall(r'\b([a-z])\s+in\s+braille\b', query_lower))
+        single_letters |= set(re.findall(r"\bwhat\s+is\s+([a-z])\b", query_lower))
+
+        # Extract dot patterns like "dots 1-2-5" or "1-2-5" for reverse lookup
+        dot_patterns = re.findall(r'(?:dots?\s+)?(\d(?:-\d)+)', query_lower)
+
+        # Extract Unicode braille characters for reverse lookup
+        braille_chars = [ch for ch in query if '\u2800' <= ch <= '\u28FF']
+
+        scored = []
+        for entry in self.kb:
+            score = 0
+            kw_lower = [k.lower() for k in entry["keywords"]]
+            kw_set = set(kw_lower)
+            # Exact keyword match
+            for kw in kw_lower:
+                if kw in query_lower:
+                    score += 3
+                for token in tokens:
+                    if token == kw:
+                        score += 2
+                    elif token in kw or kw in token:
+                        score += 1
+            # Single letter matches
+            if entry["type"] == "letter" and single_letters:
+                for letter in single_letters:
+                    if entry["id"] == f"letter_{letter}":
+                        score += 10
+            # Dot pattern reverse lookup (e.g. "what is dots 1-2-5?")
+            for dp in dot_patterns:
+                if dp in kw_set or f"dots {dp}" in kw_set:
+                    score += 10
+            # Unicode braille cell reverse lookup
+            for bc in braille_chars:
+                if bc in kw_set:
+                    score += 10
+            # Boost comparisons when "difference" or "vs" in query
+            if entry["type"] == "comparison" and any(w in query_lower for w in ["difference", "compare", "vs", "versus"]):
+                eid = entry["id"]  # e.g. "compare_d_f"
+                parts = eid.split("_")
+                if len(parts) == 3 and parts[1] in query_lower and parts[2] in query_lower:
+                    score += 10
+            if score > 0:
+                scored.append((score, entry))
+
+        scored.sort(key=lambda x: -x[0])
+        results = scored[:top_k]
+        if not results:
+            return ""
+        facts = "\n".join(f"- {e['fact']}" for _, e in results)
+        return facts
 
     @modal.method()
     def chat(self, messages: list[dict], max_tokens: int = 512) -> str:
@@ -237,16 +308,35 @@ class BrailleTutor:
         messages = request.get("messages", [])
         max_tokens = request.get("max_tokens", 512)
 
-        # Inject system prompt if not present
+        # Extract the user's latest question for RAG retrieval
+        user_query = ""
+        for m in reversed(messages):
+            if m.get("role") == "user":
+                user_query = m.get("content", "")
+                break
+
+        # RAG: retrieve relevant UEB facts
+        rag_context = self.retrieve(user_query) if user_query else ""
+
+        # Build system prompt with injected facts
         system = (
             "You are a braille tutor. You teach Unified English Braille (UEB) to sighted "
-            "and blind learners. You know every dot pattern, contraction rule, and shortform. "
-            "You give concise, accurate answers. When showing braille, use Unicode braille "
-            "characters (U+2800-U+283F) and always state the dot numbers. "
+            "and blind learners. You give concise, accurate answers. When showing braille, "
+            "use Unicode braille characters (U+2800-U+283F) and always state the dot numbers. "
             "You are not a general-purpose AI. You redirect off-topic questions back to braille. "
             "You are encouraging but honest when a learner makes a mistake."
         )
-        if not messages or messages[0].get("role") != "system":
+        if rag_context:
+            system += (
+                "\n\nREFERENCE FACTS (use these for accuracy -- they are verified UEB data):\n"
+                + rag_context
+                + "\n\nAlways prefer these reference facts over your own knowledge when answering."
+            )
+
+        # Insert or replace system message
+        if messages and messages[0].get("role") == "system":
+            messages[0]["content"] = system
+        else:
             messages = [{"role": "system", "content": system}] + messages
 
         response = self.chat.local(messages, max_tokens)

@@ -37,13 +37,15 @@ Natural language works: "teach me numbers", "practice shortforms", "I want to le
 
 You can also say `ok`, `got it`, or `thanks` to advance, and `i give up` to skip.
 
-### AI tutor
+### AI tutor (RAG-enhanced)
 
-Open-ended questions are answered by a fine-tuned LLM (Qwen2.5-3B, QLoRA-trained on 315 UEB tutoring examples, served on [Modal](https://modal.com)):
+Open-ended questions are answered by a fine-tuned LLM with retrieval-augmented generation (RAG). The model is Qwen2.5-3B, QLoRA-trained on 448 UEB tutoring examples, with a 223-entry knowledge base injected at query time for factual accuracy:
 
-- "Who invented braille?" -- real historical answer
-- "What is the difference between d and f?" -- detailed dot-pattern comparison
-- "How do numbers work?" -- conceptual explanation
+- "What is the letter f in braille?" -- **dots 1-2-4** (verified by RAG, not hallucinated)
+- "What does dots 1-2-5 represent?" -- **the letter h** (reverse lookup via RAG)
+- "What is the difference between d and f?" -- detailed dot-pattern comparison with correct cells
+- "How do numbers work?" -- conceptual explanation with all 10 digits listed correctly
+- "What are the strong groupsigns?" -- lists them with correct dot patterns and Unicode
 - Off-topic questions get redirected back to braille
 
 The AI shows a "Thinking..." indicator while loading. First request after idle may take ~30s (cold start); subsequent requests are 2-5s. If the AI is unavailable, the tutor falls back to its local rule engine -- quiz grading and spaced repetition always work offline.
@@ -74,16 +76,19 @@ User input ------->| Intent detection |
               +--------------+--------------+
               |                             |
      Quiz / commands               Open-ended questions
-     (local, instant)              (LLM on Modal, 2-30s)
+     (local, instant)              (LLM + RAG on Modal)
               |                             |
-     +--------+--------+          +--------+--------+
-     | Rule engine      |          | Qwen2.5-3B      |
-     | XP, spaced rep,  |          | QLoRA fine-tuned |
-     | grading, topics  |          | braille expert   |
-     +-----------------+          +-----------------+
+     +--------+--------+      +-----------+-----------+
+     | Rule engine      |      | 1. RAG retrieval      |
+     | XP, spaced rep,  |      |    223-entry UEB KB   |
+     | grading, topics  |      | 2. Inject top-8 facts |
+     +-----------------+      |    into system prompt  |
+                               | 3. Qwen2.5-3B answers |
+                               |    with verified data  |
+                               +-----------------------+
 ```
 
-Quiz grading is always local and deterministic. The LLM only handles conversation.
+Quiz grading is always local and deterministic. The LLM only handles conversation. RAG (retrieval-augmented generation) ensures dot patterns, contraction rules, and shortforms are accurate by injecting verified facts from the knowledge base into the model's context at query time.
 
 ## Run locally
 
@@ -98,17 +103,38 @@ Open http://localhost:8042. That's it -- single HTML file, no build step.
 The AI model is fine-tuned using the scripts in `training/`:
 
 ```bash
-# Generate the dataset
+# Generate the training dataset (448 examples)
 python3 training/build_dataset.py
 
-# Train on Modal (requires Modal account)
+# Build the RAG knowledge base (223 entries)
+python3 training/build_rag_kb.py
+
+# Train on Modal (requires Modal account + A10G GPU)
 cd training && modal run modal_app.py::train
 
-# Deploy the inference endpoint
+# Deploy the inference endpoint with RAG
 cd training && modal deploy modal_app.py
 ```
 
-The training dataset covers UEB letter patterns, numbers, Grade 2 contractions, wordsigns, groupsigns, shortforms, conceptual explanations, common mistakes, multi-turn tutoring dialogues, and social responses.
+### Files
+
+| File | Purpose |
+|------|---------|
+| `build_dataset.py` | Generates 448 training examples (letters, numbers, contractions, RAG-grounded, casual, pedagogical) |
+| `build_rag_kb.py` | Generates 223-entry knowledge base from UEB specification (letters, numbers, punctuation, contractions, shortforms, concepts) |
+| `braille_tutor_train.jsonl` | The training dataset (ChatML format) |
+| `ueb_knowledge.json` | The RAG knowledge base (JSON, keyword-indexed) |
+| `modal_app.py` | Modal app: QLoRA training + RAG-enhanced inference endpoint |
+
+### How RAG works
+
+At inference time, the endpoint:
+1. Extracts keywords from the user's question (including dot patterns like "1-2-5" and Unicode braille characters)
+2. Scores all 223 knowledge base entries by keyword overlap
+3. Injects the top 8 matching facts into the system prompt as "REFERENCE FACTS"
+4. The model is trained to prefer these facts over its own knowledge
+
+This eliminates dot-pattern hallucination -- the main failure mode of small language models on braille data.
 
 ## Data
 
