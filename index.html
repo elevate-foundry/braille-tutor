@@ -1285,10 +1285,11 @@ function updateTutorStatus() {
 }
 
 function startTutorRound(review = false) {
-  if (tutorQuestion && !tutorAnswered) {
-    tutorMessage("You have an unanswered question. Answer it, ask for a hint, or use skip before starting another round.");
-    return;
-  }
+  // Allow starting a new round anytime -- abandon unanswered question if needed
+  tutorQuestion = null;
+  tutorAnswered = false;
+  tutorLastWrong = false;
+  tutorAwaitingNext = false;
   const now = Date.now();
   let tasks = tutorTasks.filter(task => review
     ? tutorRecord(task).seen > 0 && (tutorRecord(task).misses > 0 || tutorRecord(task).due <= now)
@@ -1433,6 +1434,12 @@ function submitTutor(raw) {
   // Intent detection: normalize natural phrasing to commands
   function detectIntent(text) {
     const t = text.replace(/['']/g, "'");
+    // Topics first (so "practice grade 2" picks grade 2, not "start")
+    if (/\b(letters?|alphabet|a-z|a to z)\b/.test(t)) return "topic:0";
+    if (/\b(numbers?|digits?|0-9|counting|number system|numeric)\b/.test(t)) return "topic:5";
+    if (/\b(words?|spelling|uncontracted)\b/.test(t) && !/\bwordsigns?\b/.test(t)) return "topic:6";
+    if (/\b(grade\s*2|g2|wordsigns?|contractions?|contracted)\b/.test(t)) return "topic:7";
+    if (/\b(shortforms?|abbreviations?)\b/.test(t)) return "topic:9";
     // Start / test
     if (/\b(test|quiz|start|begin|go|ready|let'?s go|let'?s start|practice)\b/.test(t)) return "start";
     // Review
@@ -1448,16 +1455,6 @@ function submitTutor(raw) {
     if (/\b(next|continue|move on|keep going|go on|proceed)\b/.test(t)) return "next";
     // Skip
     if (/\b(skip|pass|don'?t know|no idea|i give up|surrender)\b/.test(t)) return "skip";
-    // Topic: letters
-    if (/\b(letters?|alphabet|a-z|a to z)\b/.test(t)) return "topic:0";
-    // Topic: numbers
-    if (/\b(numbers?|digits?|0-9|counting|number system|numeric)\b/.test(t)) return "topic:5";
-    // Topic: words
-    if (/\b(words?|spelling|uncontracted)\b/.test(t) && !/\bwordsigns?\b/.test(t)) return "topic:6";
-    // Topic: grade 2 wordsigns
-    if (/\b(grade\s*2|g2|wordsigns?|contractions?|contracted)\b/.test(t)) return "topic:7";
-    // Topic: shortforms
-    if (/\b(shortforms?|abbreviations?)\b/.test(t)) return "topic:9";
     return null;
   }
 
@@ -1466,7 +1463,7 @@ function submitTutor(raw) {
   if (intent === "start") return startTutorRound();
   if (intent === "review") return startTutorRound(true);
   if (intent === "help") {
-    tutorMessage("I am a local guided tutor, not a general chatbot. Commands: test me, hint, explain, next, skip, review. Topics: letters, numbers, words, grade 2, shortforms. You can also say things like 'teach me numbers' or 'practice shortforms'. Write answers using braille cells or dot numbers. Reading answers use print. Each skill returns for review after 1, 3, then 7 days. Helped or missed items return sooner. No hearts required.");
+    tutorMessage("I'm a braille tutor with an AI brain. Commands: test me, hint, explain, next, skip, review. Topics: letters, numbers, words, grade 2, shortforms. You can also ask me open-ended questions about braille — like 'who invented braille?' or 'how do contractions work?'. Write answers using braille cells or dot numbers. Reading answers use print. Each skill returns for review after 1, 3, then 7 days.");
     return;
   }
   if (intent === "hint") {
@@ -1482,14 +1479,20 @@ function submitTutor(raw) {
     }
     tutorLastWrong = false;
     tutorAwaitingNext = false;
-    if (!tutorRound || tutorRound.index >= tutorRound.queue.length) return startTutorRound();
+    if (!tutorRound || tutorRound.index >= tutorRound.queue.length) {
+      tutorMessage("Type test me to start another round, or pick a topic.");
+      return;
+    }
     return askTutorQuestion();
   }
   if (intent === "confirm") {
     if (tutorAwaitingNext) {
       tutorAwaitingNext = false;
       tutorLastWrong = false;
-      if (!tutorRound || tutorRound.index >= tutorRound.queue.length) return startTutorRound();
+      if (!tutorRound || tutorRound.index >= tutorRound.queue.length) {
+        tutorMessage("Type test me to start another round, or pick a topic.");
+        return;
+      }
       return askTutorQuestion();
     }
     if (tutorLastWrong) {
@@ -1502,7 +1505,11 @@ function submitTutor(raw) {
   if (intent === "skip") return gradeTutorAnswer("", true);
   if (intent?.startsWith("topic:")) {
     const unit = parseInt(intent.split(":")[1]);
-    if (tutorQuestion && !tutorAnswered) { tutorMessage("Answer or skip the current question before switching topics."); return; }
+    // Allow topic switch anytime -- abandon current round if needed
+    tutorQuestion = null;
+    tutorAnswered = false;
+    tutorLastWrong = false;
+    tutorAwaitingNext = false;
     tutorProgress.unit = unit;
     saveTutorProgress();
     return startTutorRound();
@@ -1513,16 +1520,16 @@ function submitTutor(raw) {
     const name = introMatch[1].charAt(0).toUpperCase() + introMatch[1].slice(1).toLowerCase();
     tutorProgress.name = name;
     saveTutorProgress();
-    tutorMessage(`Hey ${name}. I'm your braille practice partner — no name, just a local tutor in your browser. Type test me when you're ready, or pick a topic: letters, numbers, words, grade 2, shortforms.`);
+    tutorMessage(`Hey ${name}. I'm your braille tutor — ask me anything about braille, or type test me to start a quiz. Topics: letters, numbers, words, grade 2, shortforms.`);
     return;
   }
   if (/\b(what'?s your name|who are you|your name|what are you)\b/i.test(answer)) {
     const greeting = tutorProgress.name ? `${tutorProgress.name}, I` : "I";
-    tutorMessage(`${greeting} don't have a name — I'm a local braille tutor that runs entirely in your browser. No AI, no server, no account. I can teach UEB letters, numbers, words, Grade 2 wordsigns, groupsigns, and shortforms. Type test me to start.`);
+    tutorMessage(`${greeting} don't have a name — I'm a braille tutor with a fine-tuned AI brain. I can teach UEB letters, numbers, words, Grade 2 wordsigns, groupsigns, and shortforms. Ask me anything about braille, or type test me to start a quiz.`);
     return;
   }
   if (/\b(how old|where are you|where do you live|do you like|what do you think|favorite|hobby|hobbies)\b/i.test(answer)) {
-    tutorMessage(`I'm just a practice tool — I don't have an age, location, or opinions. But I can help you learn braille. Type test me, or pick a topic.`);
+    tutorMessage(`I'm a braille tutor — I don't have an age, location, or opinions. But ask me anything about braille and I'll do my best. Type test me to practice, or just ask a question.`);
     return;
   }
   if (/\b(good morning|good afternoon|good evening|good night|bye|goodbye|see you|later)\b/i.test(answer)) {
@@ -1571,7 +1578,7 @@ async function askLLM(userText) {
 
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 30000);
+    const timeout = setTimeout(() => controller.abort(), 45000);
 
     const res = await fetch(LLM_ENDPOINT, {
       method: "POST",
@@ -1594,10 +1601,12 @@ async function askLLM(userText) {
   } catch (err) {
     const thinking = document.getElementById("llm-thinking");
     if (thinking) thinking.remove();
+    // Remove failed question from history so it doesn't pollute context
+    llmHistory.pop();
     if (err.name === "AbortError") {
-      tutorMessage("That took too long. The AI tutor might be waking up — try again in a moment, or use test me to practice with the local tutor.");
+      tutorMessage("The AI is waking up from sleep — this happens after idle time. Try your question again in about 30 seconds. In the meantime, type test me to practice.");
     } else {
-      tutorMessage("Couldn't reach the AI tutor. You can still use: test me, numbers, grade 2, hint, explain, next, skip, review.");
+      tutorMessage("Couldn't reach the AI right now. The quiz still works offline — try test me, or pick a topic: letters, numbers, grade 2, shortforms.");
     }
   } finally {
     llmPending = false;
@@ -1636,7 +1645,7 @@ function initTutor() {
     updateTutorStatus();
   });
   const welcome = tutorProgress.name ? `Welcome back, ${tutorProgress.name}.` : "Let's learn braille together.";
-  tutorMessage(`${welcome} Type test me and press Enter. We will alternate reading cells and building them. You can ask for help at any time. Type numbers, words, grade 2, or shortforms to choose a topic.`);
+  tutorMessage(`${welcome} Type test me to start a quiz, or ask me anything about braille. Topics: letters, numbers, words, grade 2, shortforms.`);
   updateTutorStatus();
 }
 
