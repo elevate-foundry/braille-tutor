@@ -1213,6 +1213,7 @@ try {
   if (stored && Number.isInteger(stored.unit) && stored.unit >= 0 && stored.unit < tutorUnits.length) {
     tutorProgress.unit = stored.unit;
     tutorProgress.brailleFirst = stored.brailleFirst === true;
+    if (typeof stored.name === "string" && stored.name.length <= 30) tutorProgress.name = stored.name;
     for (const task of tutorTasks) {
       const r = stored.records?.[task.id];
       if (r && [r.box, r.due, r.misses, r.seen].every(n => Number.isFinite(n) && n >= 0)) {
@@ -1505,6 +1506,30 @@ function submitTutor(raw) {
     saveTutorProgress();
     return startTutorRound();
   }
+  // Social / identity
+  const introMatch = answer.match(/\b(?:i'?m|my name is|i am|call me|this is)\s+(\w+)/i);
+  if (introMatch) {
+    const name = introMatch[1].charAt(0).toUpperCase() + introMatch[1].slice(1).toLowerCase();
+    tutorProgress.name = name;
+    saveTutorProgress();
+    tutorMessage(`Hey ${name}. I'm your braille practice partner — no name, just a local tutor in your browser. Type test me when you're ready, or pick a topic: letters, numbers, words, grade 2, shortforms.`);
+    return;
+  }
+  if (/\b(what'?s your name|who are you|your name|what are you)\b/i.test(answer)) {
+    const greeting = tutorProgress.name ? `${tutorProgress.name}, I` : "I";
+    tutorMessage(`${greeting} don't have a name — I'm a local braille tutor that runs entirely in your browser. No AI, no server, no account. I can teach UEB letters, numbers, words, Grade 2 wordsigns, groupsigns, and shortforms. Type test me to start.`);
+    return;
+  }
+  if (/\b(how old|where are you|where do you live|do you like|what do you think|favorite|hobby|hobbies)\b/i.test(answer)) {
+    tutorMessage(`I'm just a practice tool — I don't have an age, location, or opinions. But I can help you learn braille. Type test me, or pick a topic.`);
+    return;
+  }
+  if (/\b(good morning|good afternoon|good evening|good night|bye|goodbye|see you|later)\b/i.test(answer)) {
+    const name = tutorProgress.name ? `, ${tutorProgress.name}` : "";
+    tutorMessage(/bye|goodbye|see you|later|good night/i.test(answer) ? `See you next time${name}. Your progress is saved.` : `Hey${name}! Ready to practice? Type test me, or pick a topic.`);
+    return;
+  }
+
   // Handle "am i right?" / "so i'm right?" / "is that correct?" style questions
   if (/\b(am i right|i'?m right|is that right|is that correct|was i right|did i get it|is it right|so i'?m right|was that right|was that correct)\b/i.test(answer)) {
     if (tutorAwaitingNext) {
@@ -1557,7 +1582,8 @@ function initTutor() {
     saveTutorProgress();
     updateTutorStatus();
   });
-  tutorMessage("Let's learn braille together. Type test me and press Enter. We will alternate reading cells and building them. You can ask for help at any time. Type numbers, words, grade 2, or shortforms to choose a topic.");
+  const welcome = tutorProgress.name ? `Welcome back, ${tutorProgress.name}.` : "Let's learn braille together.";
+  tutorMessage(`${welcome} Type test me and press Enter. We will alternate reading cells and building them. You can ask for help at any time. Type numbers, words, grade 2, or shortforms to choose a topic.`);
   updateTutorStatus();
 }
 
