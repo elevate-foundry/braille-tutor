@@ -1226,6 +1226,8 @@ let tutorQuestion = null;
 let tutorAssisted = false;
 let tutorAnswered = false;
 let tutorLastTask = null;
+let tutorLastWrong = false;   // true after a miss — allows retry
+let tutorAwaitingNext = false; // true after correct or explanation shown
 
 function saveTutorProgress() {
   try { localStorage.setItem(TUTOR_KEY, JSON.stringify(tutorProgress)); }
@@ -1320,6 +1322,8 @@ function askTutorQuestion() {
   tutorLastTask = tutorQuestion;
   tutorAssisted = false;
   tutorAnswered = false;
+  tutorLastWrong = false;
+  tutorAwaitingNext = false;
   const { card, direction } = tutorQuestion;
   const reading = direction === "read";
   const context = ["wordsign", "shortform", "contraction"].includes(card.kind) ? " In contracted UEB, standing alone." : "";
@@ -1345,8 +1349,13 @@ function parseTutorCells(answer) {
 }
 
 function gradeTutorAnswer(answer, skip = false) {
-  if (!tutorQuestion || tutorAnswered) {
-    tutorMessage("Type next to continue, or test me to begin. Type help for topics and commands.");
+  // After a correct answer or explanation, wait for "next"
+  if (tutorAwaitingNext) {
+    tutorMessage("Type next to continue, or test me to start a new round.");
+    return;
+  }
+  if (!tutorQuestion) {
+    tutorMessage("Type test me to begin, or help for commands.");
     return;
   }
   const task = tutorQuestion;
@@ -1358,7 +1367,23 @@ function gradeTutorAnswer(answer, skip = false) {
       return;
     }
   }
-  const correct = !skip && actual === (task.direction === "read" ? task.card.label : task.card.braille);
+  const expected = task.direction === "read" ? task.card.label : task.card.braille;
+  const correct = !skip && actual === expected;
+
+  // Retry after a wrong answer: let them try again without penalty
+  if (tutorLastWrong && !skip) {
+    if (correct) {
+      tutorLastWrong = false;
+      tutorAwaitingNext = true;
+      tutorMessage(`Yes, that's right! ${task.card.label} is ${cellDots(task.card.braille)}. Now it should stick. Type next when ready.`, task.card.braille);
+      playTone(523, 0.1, "sine"); setTimeout(() => playTone(659, 0.1, "sine"), 100);
+    } else {
+      tutorMessage(`Not yet. The answer is ${task.direction === "read" ? task.card.label : cellDots(task.card.braille)}. Try typing it, or use next to move on.`, task.card.braille);
+    }
+    return;
+  }
+
+  // First attempt scoring
   tutorAnswered = true;
   const record = tutorRecord(task);
   const recalled = correct && !tutorAssisted;
@@ -1378,7 +1403,21 @@ function gradeTutorAnswer(answer, skip = false) {
   }
   r.index++;
   saveTutorProgress();
-  tutorMessage(`${correct ? (tutorAssisted ? "Correct with help. Let's recall it again later." : "Correct. You earned 10 xp.") : (skip ? "Skipped. Let's learn this one." : "Not quite. Let's look at the pattern.")} ${tutorExplanation(task.card)} Type next when ready.`, task.card.braille);
+
+  if (correct) {
+    tutorAwaitingNext = true;
+    tutorMessage(`${tutorAssisted ? "Correct with help. It will come back for review." : "Correct! +10 xp."} ${tutorExplanation(task.card)} Type next when ready.`, task.card.braille);
+    if (!tutorAssisted) { playTone(523, 0.1, "sine"); setTimeout(() => playTone(659, 0.1, "sine"), 100); }
+  } else if (skip) {
+    tutorAwaitingNext = true;
+    tutorMessage(`Skipped. ${tutorExplanation(task.card)} Type next when ready.`, task.card.braille);
+  } else {
+    // Wrong: explain but allow retry
+    tutorLastWrong = true;
+    const hint = task.direction === "read" ? task.card.label : cellDots(task.card.braille);
+    tutorMessage(`Not quite — the answer is ${hint}. ${tutorExplanation(task.card)} Try typing it now to reinforce, or use next to move on.`, task.card.braille);
+    playTone(220, 0.15, "square");
+  }
   document.getElementById("tutor-dots").hidden = true;
   updateTutorStatus();
 }
@@ -1400,6 +1439,9 @@ function submitTutor(raw) {
     if (/\b(help|commands?|what can you|how do i|how does|instructions?)\b/.test(t) && !/\bhow old\b/.test(t)) return "help";
     // Hint / explain
     if (/\b(hint|explain|why|show me the answer|what is it|tell me)\b/.test(t) && !/\btell me about\b/.test(t)) return "hint";
+    // Confirmatory phrases after an answer (not questions about being right)
+    if (/\b(got it|ok|okay|i see|understood|makes sense|cool|thanks|thank you|alright|sure|yep|yup|neat)\b/.test(t)) return "confirm";
+    if (/^(yes|right|correct|yeah)$/i.test(t)) return "confirm";
     // Next / continue
     if (/\b(next|continue|move on|keep going|go on|proceed)\b/.test(t)) return "next";
     // Skip
@@ -1432,9 +1474,28 @@ function submitTutor(raw) {
     return;
   }
   if (intent === "next") {
-    if (tutorQuestion && !tutorAnswered) { tutorMessage("Try this question first, or use hint or skip. There is no penalty for taking your time."); return; }
-    if (!tutorRound || !tutorQuestion) return startTutorRound();
+    if (tutorQuestion && !tutorAnswered && !tutorLastWrong && !tutorAwaitingNext) {
+      tutorMessage("Try this question first, or use hint or skip. There is no penalty for taking your time.");
+      return;
+    }
+    tutorLastWrong = false;
+    tutorAwaitingNext = false;
+    if (!tutorRound || tutorRound.index >= tutorRound.queue.length) return startTutorRound();
     return askTutorQuestion();
+  }
+  if (intent === "confirm") {
+    if (tutorAwaitingNext) {
+      tutorAwaitingNext = false;
+      tutorLastWrong = false;
+      if (!tutorRound || tutorRound.index >= tutorRound.queue.length) return startTutorRound();
+      return askTutorQuestion();
+    }
+    if (tutorLastWrong) {
+      tutorMessage("Not quite yet — try typing the correct answer, or use next to move on.");
+      return;
+    }
+    tutorMessage("Type test me to start a round, or help for commands.");
+    return;
   }
   if (intent === "skip") return gradeTutorAnswer("", true);
   if (intent?.startsWith("topic:")) {
@@ -1443,6 +1504,19 @@ function submitTutor(raw) {
     tutorProgress.unit = unit;
     saveTutorProgress();
     return startTutorRound();
+  }
+  // Handle "am i right?" / "so i'm right?" / "is that correct?" style questions
+  if (/\b(am i right|i'?m right|is that right|is that correct|was i right|did i get it|is it right|so i'?m right|was that right|was that correct)\b/i.test(answer)) {
+    if (tutorAwaitingNext) {
+      tutorMessage("Yes! Type next to continue.");
+      return;
+    }
+    if (tutorLastWrong) {
+      tutorMessage("Not yet. Try the correct answer, or type next to move on.");
+      return;
+    }
+    tutorMessage("Type test me to start a round first.");
+    return;
   }
   // If no intent matched and it looks conversational, say so honestly
   if (/[?]/.test(answer) || (answer.split(/\s+/).length > 3 && !(tutorQuestion?.direction === "write" && parseTutorCells(answer) !== null))) {
