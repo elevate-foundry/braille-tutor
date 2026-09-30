@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>braille tutor</title>
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --fg: #e0e0e0;
+    --dim: #666;
+    --accent: #4fc3f7;
+    --correct: #66bb6a;
+    --wrong: #ef5350;
+    --gold: #ffd54f;
+    --xp: #7c4dff;
+    --cell-bg: #1a1a1a;
+    --cell-border: #333;
+    --dot-on: #e0e0e0;
+    --dot-off: #222;
+    --dot-hover: #444;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    background: var(--bg); color: var(--fg);
+    min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+    padding: 1.5rem 1rem; overflow-x: hidden;
+  }
+
+  /* Header */
+  .header { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.3rem; width: 100%; max-width: 640px; }
+  .header h1 { font-size: 1.2rem; font-weight: 400; letter-spacing: 0.05em; flex: 1; }
+  .stat { display: flex; align-items: center; gap: 0.3rem; font-size: 0.8rem; }
+  .stat-xp { color: var(--xp); }
+  .stat-streak { color: var(--gold); }
+  .stat-hearts { color: var(--wrong); }
+
+  .subtitle { color: var(--dim); font-size: 0.75rem; margin-bottom: 1.5rem; width: 100%; max-width: 640px; }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 0; margin-bottom: 1.5rem; border: 1px solid var(--cell-border); border-radius: 6px; overflow: hidden; }
+  .tab {
+    padding: 0.45rem 1rem; font-size: 0.8rem; font-family: inherit;
+    background: transparent; color: var(--dim); border: none; cursor: pointer; transition: all 0.15s;
+  }
+  .tab:not(:last-child) { border-right: 1px solid var(--cell-border); }
+  .tab.active { background: var(--cell-border); color: var(--fg); }
+  .tab:hover:not(.active) { color: var(--fg); background: #151515; }
+
+  /* Panels */
+  .panel { display: none; width: 100%; max-width: 640px; }
+  .panel.active { display: block; }
+
+  /* Mode bar */
+  .mode-bar { display: flex; gap: 0.4rem; margin-bottom: 1.2rem; align-items: center; flex-wrap: wrap; }
+  .mode-label { color: var(--dim); font-size: 0.7rem; margin-right: 0.3rem; }
+  .mode-btn {
+    padding: 0.25rem 0.7rem; font-size: 0.7rem; font-family: inherit;
+    background: transparent; color: var(--dim); border: 1px solid var(--cell-border);
+    border-radius: 4px; cursor: pointer; transition: all 0.15s;
+  }
+  .mode-btn.active { border-color: var(--accent); color: var(--accent); }
+  .mode-btn.locked { opacity: 0.4; cursor: not-allowed; }
+  .mode-btn .lock-icon { font-size: 0.6rem; }
+
+  /* Progress bar (lesson) */
+  .progress-bar { width: 100%; height: 6px; background: var(--cell-border); border-radius: 3px; margin-bottom: 1.5rem; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.4s ease; }
+
+  /* Lesson road (Duolingo-style tree) */
+  .lesson-road { display: flex; flex-direction: column; align-items: center; gap: 1rem; padding: 1rem 0; }
+  .lesson-node {
+    width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; cursor: pointer; border: 3px solid var(--cell-border);
+    background: var(--cell-bg); transition: all 0.2s; position: relative;
+  }
+  .lesson-node:hover { transform: scale(1.08); }
+  .lesson-node.completed { border-color: var(--correct); background: #1b2e1b; }
+  .lesson-node.current { border-color: var(--accent); box-shadow: 0 0 16px rgba(79,195,247,0.3); animation: pulse 2s ease infinite; }
+  .lesson-node.locked { opacity: 0.35; cursor: not-allowed; }
+  .lesson-node.locked:hover { transform: none; }
+  .lesson-node .node-label { position: absolute; bottom: -1.4rem; font-size: 0.65rem; color: var(--dim); white-space: nowrap; }
+  .lesson-node .node-stars { position: absolute; top: -0.8rem; font-size: 0.6rem; color: var(--gold); }
+  .lesson-connector { width: 2px; height: 20px; background: var(--cell-border); }
+  .lesson-connector.done { background: var(--correct); }
+
+  @keyframes pulse { 0%,100% { box-shadow: 0 0 8px rgba(79,195,247,0.2); } 50% { box-shadow: 0 0 20px rgba(79,195,247,0.4); } }
+
+  /* Exercise area */
+  .exercise { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+  .exercise-prompt { font-size: 1rem; text-align: center; min-height: 2rem; }
+  .exercise-prompt .big { font-size: 4rem; display: block; margin: 0.5rem 0; line-height: 1.2; }
+  .exercise-prompt .medium { font-size: 2rem; display: block; margin: 0.3rem 0; color: var(--accent); }
+
+  /* Multiple choice */
+  .choices { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; width: 100%; }
+  .choice {
+    padding: 0.8rem 0.5rem; font-size: 1.3rem; font-family: inherit;
+    background: var(--cell-bg); color: var(--fg); border: 2px solid var(--cell-border);
+    border-radius: 8px; cursor: pointer; transition: all 0.15s; text-align: center;
+  }
+  .choice:hover { border-color: var(--accent); }
+  .choice.correct { border-color: var(--correct); background: #1b2e1b; }
+  .choice.wrong { border-color: var(--wrong); background: #2e1b1b; }
+  .choice .sub { display: block; font-size: 0.6rem; color: var(--dim); margin-top: 2px; }
+
+  /* Typing input */
+  .type-input {
+    width: 100%; max-width: 400px; padding: 0.8rem 1rem; font-size: 1.3rem; font-family: inherit;
+    background: var(--cell-bg); color: var(--fg); border: 2px solid var(--cell-border);
+    border-radius: 8px; outline: none; text-align: center;
+  }
+  .type-input:focus { border-color: var(--accent); }
+  .type-input.correct { border-color: var(--correct); }
+  .type-input.wrong { border-color: var(--wrong); }
+
+  /* Dot input (tap dots to form a cell) */
+  .dot-input-area { display: flex; align-items: center; gap: 2rem; }
+  .cell-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 20px;
+    background: var(--cell-bg); border: 1px solid var(--cell-border); border-radius: 12px;
+  }
+  .dot {
+    width: 40px; height: 40px; border-radius: 50%; background: var(--dot-off);
+    border: 2px solid var(--cell-border); cursor: pointer; transition: all 0.15s;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.65rem; color: var(--dim); user-select: none;
+  }
+  .dot:hover { background: var(--dot-hover); border-color: var(--dim); }
+  .dot.on { background: var(--dot-on); border-color: var(--dot-on); color: var(--bg); }
+  .dot-preview { font-size: 4rem; line-height: 1; min-width: 3rem; text-align: center; }
+
+  /* Submit / check button */
+  .btn {
+    padding: 0.5rem 2rem; font-size: 0.85rem; font-family: inherit;
+    border: none; border-radius: 6px; cursor: pointer; transition: all 0.15s;
+  }
+  .btn-primary { background: var(--accent); color: var(--bg); }
+  .btn-primary:hover { opacity: 0.9; }
+  .btn-secondary { background: var(--cell-border); color: var(--fg); }
+  .btn-skip { background: transparent; color: var(--dim); border: 1px solid var(--cell-border); }
+
+  /* Feedback banner */
+  .feedback {
+    width: 100%; padding: 1rem; border-radius: 8px; text-align: center;
+    font-size: 0.9rem; animation: slideUp 0.3s ease;
+  }
+  .feedback.correct { background: #1b2e1b; border: 1px solid var(--correct); color: var(--correct); }
+  .feedback.wrong { background: #2e1b1b; border: 1px solid var(--wrong); color: var(--wrong); }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* XP animation */
+  .xp-popup {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    font-size: 2rem; color: var(--xp); font-weight: bold; pointer-events: none;
+    animation: xpFloat 1s ease forwards;
+  }
+  @keyframes xpFloat { 0% { opacity: 1; transform: translate(-50%,-50%) scale(1); } 100% { opacity: 0; transform: translate(-50%,-120%) scale(1.5); } }
+
+  /* Level complete overlay */
+  .overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: flex;
+    align-items: center; justify-content: center; z-index: 100;
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .overlay-card {
+    background: var(--cell-bg); border: 1px solid var(--cell-border); border-radius: 16px;
+    padding: 2.5rem; text-align: center; max-width: 380px;
+  }
+  .overlay-card h2 { font-size: 1.3rem; font-weight: 400; margin-bottom: 0.5rem; }
+  .overlay-card .xp-earned { font-size: 2rem; color: var(--xp); margin: 1rem 0; }
+  .overlay-card .stars-earned { font-size: 2rem; margin: 0.5rem 0; color: var(--gold); }
+  .overlay-card .stats-row { display: flex; justify-content: center; gap: 2rem; color: var(--dim); font-size: 0.8rem; margin: 1rem 0; }
+
+  /* Char grid (learn) */
+  .char-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 1rem 0; }
+  .char-card {
+    display: flex; flex-direction: column; align-items: center; padding: 10px 6px;
+    background: var(--cell-bg); border: 1px solid var(--cell-border); border-radius: 8px;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .char-card:hover { border-color: var(--accent); }
+  .char-card .braille { font-size: 1.8rem; line-height: 1.2; }
+  .char-card .label { font-size: 0.8rem; color: var(--dim); margin-top: 3px; }
+
+  /* Sandbox */
+  .sandbox-input {
+    width: 100%; padding: 0.7rem 1rem; font-size: 1rem; font-family: inherit;
+    background: var(--cell-bg); color: var(--fg); border: 1px solid var(--cell-border);
+    border-radius: 8px; outline: none; margin-bottom: 1rem;
+  }
+  .sandbox-input:focus { border-color: var(--accent); }
+  .sandbox-output {
+    font-size: 2rem; padding: 1rem; background: var(--cell-bg);
+    border: 1px solid var(--cell-border); border-radius: 8px; min-height: 4rem;
+    word-break: break-all; line-height: 1.4;
+  }
+  .sandbox-output .char-pair { display: inline-block; position: relative; cursor: default; padding: 2px; border-radius: 4px; }
+  .sandbox-output .char-pair:hover { background: #222; }
+  .sandbox-output .char-pair .tooltip {
+    display: none; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
+    background: #333; color: var(--fg); padding: 2px 8px; border-radius: 4px; font-size: 0.65rem; white-space: nowrap; pointer-events: none;
+  }
+  .sandbox-output .char-pair:hover .tooltip { display: block; }
+  .sandbox-grade { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; }
+  .info-box {
+    background: var(--cell-bg); border: 1px solid var(--cell-border); border-radius: 8px;
+    padding: 0.8rem; margin: 1rem 0; font-size: 0.8rem; color: var(--dim); line-height: 1.5;
+  }
+  .cell-display { display: flex; align-items: center; gap: 1.5rem; margin: 1rem 0; }
+  .cell-info { display: flex; flex-direction: column; gap: 0.2rem; }
+  .cell-char { font-size: 1.8rem; color: var(--accent); }
+  .cell-dots { color: var(--dim); font-size: 0.8rem; }
+  .lesson-header { font-size: 1rem; margin-bottom: 0.4rem; color: var(--accent); }
+  .lesson-desc { color: var(--dim); font-size: 0.8rem; margin-bottom: 1rem; line-height: 1.5; }
+  :root { --dim: #aaa; }
+  :focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+  .tutor-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin: .8rem 0; }
+  .tutor-actions .btn { padding: .6rem .8rem; }
+  .tutor-log { max-height: 48vh; min-height: 180px; overflow-y: auto; border: 1px solid var(--cell-border); border-radius: 8px; padding: 1rem; }
+  .tutor-message { margin-bottom: 1.2rem; overflow-wrap: anywhere; }
+  .tutor-message[data-speaker="you"] { border-left: 2px solid var(--accent); padding-left: .8rem; }
+  .tutor-speaker { color: var(--accent); font-size: .75rem; margin-bottom: .3rem; }
+  .tutor-print { line-height: 1.6; white-space: pre-wrap; }
+  .tutor-braille { font-size: 1.5rem; line-height: 1.6; white-space: pre-wrap; }
+  .tutor-cell { font-size: 3rem; display: block; margin: .6rem 0; }
+  .braille-first .tutor-print { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); }
+  #tutor-form { margin-top: 1rem; }
+  #tutor-form label { display: block; margin-bottom: .5rem; }
+  #tutor-dots { margin: 1rem 0; }
+  #tutor-dots[hidden] { display: none; }
+  #tutor-dots .cell-grid { width: max-content; }
+  #tutor-status { color: var(--accent); margin: .8rem 0; }
+  #sandbox details { margin-top: 1.5rem; }
+  #sandbox summary { cursor: pointer; padding: .7rem 0; }
+  @media (max-width: 480px) {
+    .header { flex-wrap: wrap; }
+    .choices { grid-template-columns: repeat(2, 1fr); }
+    .tutor-log { max-height: 42vh; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>braille tutor</h1>
+  <div class="stat stat-xp"><span id="total-xp">0</span> xp</div>
+  <div class="stat stat-streak"><span id="daily-streak">0</span> day</div>
+  <div class="stat stat-hearts" title="Only the legacy Learn lessons use hearts; Tutor and Practice are unlimited"><span id="hearts">5</span> / 5 lesson hearts</div>
+</div>
+<p class="subtitle">learn to read and write braille — one lesson at a time</p>
+
+<div class="tabs">
+  <button class="tab active" data-tab="sandbox">tutor</button>
+  <button class="tab" data-tab="learn">learn</button>
+  <button class="tab" data-tab="practice">practice</button>
+</div>
+
+<!-- LEARN PANEL -->
+<div id="learn" class="panel">
+  <div id="lesson-road"></div>
+</div>
+
+<!-- PRACTICE PANEL (replaces old quiz) -->
+<div id="practice" class="panel">
+  <div class="mode-bar">
+    <span class="mode-label">mode:</span>
+    <button class="mode-btn active" data-dots="6">6-dot</button>
+    <button class="mode-btn" data-dots="8">8-dot</button>
+    <span class="mode-label" style="margin-left:0.8rem">level:</span>
+    <button class="mode-btn quiz-level active" data-level="0">a-j</button>
+    <button class="mode-btn quiz-level" data-level="1">k-t</button>
+    <button class="mode-btn quiz-level" data-level="2">u-z</button>
+    <button class="mode-btn quiz-level" data-level="3">0-9</button>
+    <button class="mode-btn quiz-level" data-level="4">all</button>
+    <button class="mode-btn quiz-level" data-level="5">G2</button>
+  </div>
+  <div id="practice-area"></div>
+</div>
+
+<!-- SANDBOX PANEL -->
+<div id="sandbox" class="panel active">
+  <h2 class="lesson-header">your braille practice partner</h2>
+  <p class="lesson-desc">Local guided tutor, not an AI chatbot. Short UEB reading and writing rounds, with print and uncontracted braille feedback. No account or network requests. Progress stays in this browser.</p>
+  <label><input type="checkbox" id="tutor-braille-first"> Braille-first display (hide print feedback)</label>
+  <div class="tutor-actions" aria-label="Tutor commands">
+    <button class="btn btn-primary" data-tutor-command="test me">test me</button>
+    <button class="btn btn-secondary" data-tutor-command="review">review mistakes</button>
+    <button class="btn btn-secondary" data-tutor-command="hint">hint</button>
+    <button class="btn btn-secondary" data-tutor-command="explain">explain</button>
+    <button class="btn btn-secondary" data-tutor-command="next">next</button>
+    <button class="btn btn-secondary" data-tutor-command="help">help</button>
+  </div>
+  <div id="tutor-status" role="status"></div>
+  <div id="tutor-log" class="tutor-log" role="log" aria-label="Tutor conversation" aria-live="polite" aria-relevant="additions" tabindex="0"></div>
+  <form id="tutor-form">
+    <label for="sandbox-input">Your answer or command</label>
+    <input class="sandbox-input" id="sandbox-input" placeholder="Type test me, or answer here; Enter sends" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="500" aria-describedby="tutor-input-help">
+    <button class="btn btn-primary" type="submit">send</button>
+    <p class="lesson-desc" id="tutor-input-help">Read: type the letter or word. Write: enter braille cells or dot numbers (1-2, or separate cells with /). Use next when ready.</p>
+  </form>
+  <div id="tutor-dots" hidden>
+    <p class="lesson-desc">Build a cell. Tab to a dot and press Space to toggle it.</p>
+    <div class="cell-grid" role="group" aria-label="Braille dot input">
+      <button type="button" class="dot" data-tutor-dot="1" aria-label="Dot 1" aria-pressed="false">1</button>
+      <button type="button" class="dot" data-tutor-dot="4" aria-label="Dot 4" aria-pressed="false">4</button>
+      <button type="button" class="dot" data-tutor-dot="2" aria-label="Dot 2" aria-pressed="false">2</button>
+      <button type="button" class="dot" data-tutor-dot="5" aria-label="Dot 5" aria-pressed="false">5</button>
+      <button type="button" class="dot" data-tutor-dot="3" aria-label="Dot 3" aria-pressed="false">3</button>
+      <button type="button" class="dot" data-tutor-dot="6" aria-label="Dot 6" aria-pressed="false">6</button>
+    </div>
+    <button type="button" class="btn btn-secondary" id="tutor-send-dots">send cell</button>
+  </div>
+  <details>
+    <summary>Translation sandbox (experimental, not the quiz answer key)</summary>
+    <div class="mode-bar">
+      <span class="mode-label">mode:</span>
+      <button class="mode-btn active" data-dots="6">6-dot</button>
+      <button class="mode-btn" data-dots="8">8-dot</button>
+    </div>
+    <div class="sandbox-grade">
+      <span class="mode-label">grade:</span>
+      <button class="mode-btn sandbox-grade-btn active" data-grade="1">G1</button>
+      <button class="mode-btn sandbox-grade-btn" data-grade="2">G2</button>
+    </div>
+    <label for="translation-input">Text to translate</label>
+    <input class="sandbox-input" id="translation-input" placeholder="Live translation, not chat" maxlength="2000">
+    <div class="sandbox-output" id="sandbox-output"></div>
+    <div class="info-box" id="sandbox-info">Translation updates as you type. This prototype is not a standards-validated transcriber.</div>
+  </details>
+</div>
+
+<script>
+// =========================================================================
+// Braille data (same as ueb.ts, client-side)
+// =========================================================================
+function dots6(...ds) {
+  let bits = 0;
+  for (const d of ds) bits |= 1 << (d - 1);
+  return String.fromCharCode(0x2800 + bits);
+}
+
+const LETTERS = {
+  a: dots6(1), b: dots6(1,2), c: dots6(1,4), d: dots6(1,4,5), e: dots6(1,5),
+  f: dots6(1,2,4), g: dots6(1,2,4,5), h: dots6(1,2,5), i: dots6(2,4), j: dots6(2,4,5),
+  k: dots6(1,3), l: dots6(1,2,3), m: dots6(1,3,4), n: dots6(1,3,4,5), o: dots6(1,3,5),
+  p: dots6(1,2,3,4), q: dots6(1,2,3,4,5), r: dots6(1,2,3,5), s: dots6(2,3,4),
+  t: dots6(2,3,4,5), u: dots6(1,3,6), v: dots6(1,2,3,6), w: dots6(2,4,5,6),
+  x: dots6(1,3,4,6), y: dots6(1,3,4,5,6), z: dots6(1,3,5,6),
+};
+const DIGITS = {
+  "0": dots6(2,4,5), "1": dots6(1), "2": dots6(1,2), "3": dots6(1,4),
+  "4": dots6(1,4,5), "5": dots6(1,5), "6": dots6(1,2,4), "7": dots6(1,2,4,5),
+  "8": dots6(1,2,5), "9": dots6(2,4),
+};
+const PUNCT = {
+  " ":" ", ".":dots6(2,5,6), ",":dots6(2), ":":dots6(2,5),
+  ";":dots6(2,3), "!":dots6(2,3,5), "?":dots6(2,3,6), "-":dots6(3,6), "'":dots6(3),
+};
+const NUM_IND = dots6(3,4,5,6);
+const CAP_IND = dots6(6);
+
+// 8-dot NABCC
+const NABCC = {};
+const nabccStr = " A1B'K2L@CIF/MSP\"E3H9O6R^DJG>NTQ,*5<-U8V.%[$+X!&;:4\\0Z7(_?W]#Y)=";
+for (let i = 0; i < nabccStr.length; i++) NABCC[nabccStr[i]] = String.fromCharCode(0x2800 + i);
+for (let i = 0; i < 26; i++) {
+  const lo = String.fromCharCode(97 + i), up = String.fromCharCode(65 + i);
+  if (NABCC[up]) NABCC[lo] = String.fromCharCode(NABCC[up].charCodeAt(0) | 64);
+}
+
+function getDots(ch, n = 6) {
+  const code = ch.charCodeAt(0) - 0x2800;
+  const ds = [];
+  for (let i = 0; i < n; i++) if (code & (1 << i)) ds.push(i + 1);
+  return ds;
+}
+
+// G1 translator (simple, for sandbox)
+function translateG1(input) {
+  const out = []; let inNum = false;
+  for (let i = 0; i < input.length; i++) {
+    const ch = input[i];
+    if (ch >= "0" && ch <= "9") { if (!inNum) { out.push(NUM_IND); inNum = true; } out.push(DIGITS[ch]); continue; }
+    if (inNum) { inNum = false; if (ch.toLowerCase() >= "a" && ch.toLowerCase() <= "j") out.push(dots6(5,6)); }
+    if (ch >= "A" && ch <= "Z") { out.push(CAP_IND); out.push(LETTERS[ch.toLowerCase()]); continue; }
+    if (ch >= "a" && ch <= "z") { out.push(LETTERS[ch]); continue; }
+    const p = PUNCT[ch]; if (p) { out.push(p); continue; }
+    out.push(ch);
+  }
+  return out.join("");
+}
+
+// G2 contractions (mirrors the engine in ueb.ts)
+const STRONG_CONTRACTIONS = { and: dots6(1,2,3,4,6), for: dots6(1,2,3,4,5,6), of: dots6(1,2,3,5,6), the: dots6(2,3,4,6), with: dots6(2,3,4,5,6) };
+const STRONG_GROUPSIGNS = { ch:dots6(1,6), gh:dots6(1,2,6), sh:dots6(1,4,6), th:dots6(1,4,5,6), wh:dots6(1,5,6), ed:dots6(1,2,4,6), er:dots6(1,2,4,5,6), ou:dots6(1,2,5,6), ow:dots6(2,4,6), st:dots6(3,4), ar:dots6(3,4,5), ing:dots6(3,4,6) };
+const ALPHABETIC_WORDSIGNS = { but:"b",can:"c",do:"d",every:"e",from:"f",go:"g",have:"h",just:"j",knowledge:"k",like:"l",more:"m",not:"n",people:"p",quite:"q",rather:"r",so:"s",that:"t",us:"u",very:"v",will:"w",it:"x",you:"y",as:"z" };
+const STRONG_WORDSIGNS = { child:dots6(1,6), shall:dots6(1,4,6), this:dots6(1,4,5,6), which:dots6(1,5,6), out:dots6(1,2,5,6), still:dots6(3,4) };
+const LOWER_WORDSIGNS = { be:dots6(2,3), enough:dots6(2,6), were:dots6(2,3,5,6), his:dots6(2,3,6), was:dots6(3,5,6), in:dots6(3,5) };
+const INITIAL_DOT5 = { day:dots6(5)+dots6(1,4,5), ever:dots6(5)+dots6(1,5), father:dots6(5)+dots6(1,2,4), here:dots6(5)+dots6(1,2,5), know:dots6(5)+dots6(1,3), lord:dots6(5)+dots6(1,2,3), mother:dots6(5)+dots6(1,3,4), name:dots6(5)+dots6(1,3,4,5), one:dots6(5)+dots6(1,3,5), part:dots6(5)+dots6(1,2,3,4), question:dots6(5)+dots6(1,2,3,4,5), right:dots6(5)+dots6(1,2,3,5), some:dots6(5)+dots6(2,3,4), time:dots6(5)+dots6(2,3,4,5), under:dots6(5)+dots6(1,3,6), young:dots6(5)+dots6(1,3,4,5,6), there:dots6(5)+dots6(2,3,4,6), character:dots6(5)+dots6(1,6), through:dots6(5)+dots6(1,4,5,6), where:dots6(5)+dots6(1,5,6), ought:dots6(5)+dots6(1,2,5,6), work:dots6(5)+dots6(2,4,5,6) };
+const INITIAL_DOTS45 = { upon:dots6(4,5)+dots6(1,3,6), word:dots6(4,5)+dots6(2,4,5,6), these:dots6(4,5)+dots6(2,3,4,6), those:dots6(4,5)+dots6(1,4,5,6), whose:dots6(4,5)+dots6(1,5,6) };
+const INITIAL_DOTS456 = { cannot:dots6(4,5,6)+dots6(1,4), had:dots6(4,5,6)+dots6(1,2,5), many:dots6(4,5,6)+dots6(1,3,4), spirit:dots6(4,5,6)+dots6(2,3,4), world:dots6(4,5,6)+dots6(2,4,5,6), their:dots6(4,5,6)+dots6(2,3,4,6) };
+const FINAL_DOTS46 = { ound:dots6(4,6)+dots6(1,4,5), ance:dots6(4,6)+dots6(1,5), sion:dots6(4,6)+dots6(1,3,4,5), less:dots6(4,6)+dots6(2,3,4), ount:dots6(4,6)+dots6(2,3,4,5) };
+const FINAL_DOTS56 = { ence:dots6(5,6)+dots6(1,5), ong:dots6(5,6)+dots6(1,2,4,5), ful:dots6(5,6)+dots6(1,2,3), tion:dots6(5,6)+dots6(1,3,4,5), ness:dots6(5,6)+dots6(2,3,4), ment:dots6(5,6)+dots6(2,3,4,5), ity:dots6(5,6)+dots6(1,3,4,5,6) };
+const SHORTFORMS = {about:"ab",above:"abv",according:"ac",across:"acr",after:"af",afternoon:"afn",afterward:"afw",again:"ag",almost:"alm",already:"alr",also:"al",altogether:"alt",always:"alw",blind:"bl",braille:"brl",children:String.fromCharCode(0x2800+((1<<0)|(1<<5)))+"n",could:"cd",either:"ei",first:"fst",friend:"fr",good:"gd",great:"grt",him:"hm",himself:"hmf",immediate:"imm",its:"xs",itself:"xf",letter:"lr",little:"ll",much:"m"+String.fromCharCode(0x2800+((1<<0)|(1<<5))),necessary:"nec",neither:"nei",paid:"pd",quick:"qk",said:"sd",today:"td",together:"tgr",tomorrow:"tm",tonight:"tn",would:"wd",your:"yr",yourself:"yrf",yourselves:"yrvs"};
+
+function isLetterChar(ch) { return (ch >= "a" && ch <= "z") || (ch >= "A" && ch <= "Z"); }
+function translateLetterSeq(seq) {
+  return [...seq].map(ch => ch.charCodeAt(0) >= 0x2800 ? ch : (LETTERS[ch] || ch)).join("");
+}
+function contractWordInner(word) {
+  const out = []; let i = 0;
+  while (i < word.length) {
+    let bestT = "", bestB = "";
+    for (const [t,b] of Object.entries(INITIAL_DOTS456).concat(Object.entries(INITIAL_DOTS45), Object.entries(INITIAL_DOT5))) {
+      if (word.startsWith(t, i) && t.length > bestT.length) { bestT = t; bestB = b; }
+    }
+    for (const [t,b] of Object.entries(STRONG_CONTRACTIONS)) {
+      if (word.startsWith(t, i) && t.length > bestT.length) { bestT = t; bestB = b; }
+    }
+    if (bestT) { out.push(bestB); i += bestT.length; continue; }
+    for (const [t,b] of Object.entries(FINAL_DOTS56).concat(Object.entries(FINAL_DOTS46))) {
+      if (word.startsWith(t, i)) { out.push(b); i += t.length; bestT = t; break; }
+    }
+    if (bestT) continue;
+    if (word.startsWith("ing", i)) { out.push(STRONG_GROUPSIGNS.ing); i += 3; continue; }
+    let matched = false;
+    for (const [t,b] of Object.entries(STRONG_GROUPSIGNS)) {
+      if (t === "ing") continue;
+      if (word.startsWith(t, i)) { out.push(b); i += t.length; matched = true; break; }
+    }
+    if (matched) continue;
+    if (i === 0) {
+      for (const pf of ["dis","con","be"]) {
+        if (word.startsWith(pf) && word.length > pf.length) {
+          out.push({dis:dots6(2,5,6),con:dots6(2,5),be:dots6(2,3)}[pf]); i += pf.length; matched = true; break;
+        }
+      }
+      if (matched) continue;
+    }
+    for (const t of ["ea","bb","cc","ff","gg","en","in"]) {
+      if (word.startsWith(t, i)) { out.push({ea:dots6(2),bb:dots6(2,3),cc:dots6(2,5),ff:dots6(2,3,5),gg:dots6(2,3,5,6),en:dots6(2,6),in:dots6(3,5)}[t]); i += t.length; matched = true; break; }
+    }
+    if (matched) continue;
+    out.push(LETTERS[word[i]] || word[i]); i++;
+  }
+  return out.join("");
+}
+
+function translateG2(input) {
+  const out = []; let i = 0, inNum = false;
+  while (i < input.length) {
+    const ch = input[i];
+    if (ch >= "0" && ch <= "9") { if (!inNum) { out.push(NUM_IND); inNum = true; } out.push(DIGITS[ch]); i++; continue; }
+    if (inNum) { inNum = false; if (ch.toLowerCase() >= "a" && ch.toLowerCase() <= "j") out.push(dots6(5,6)); }
+    if (!isLetterChar(ch)) { const p = PUNCT[ch]; out.push(p !== undefined ? p : ch); i++; continue; }
+    let we = i; while (we < input.length && isLetterChar(input[we])) we++;
+    const word = input.slice(i, we), wl = word.toLowerCase();
+    const isAlone = (i === 0 || !isLetterChar(input[i-1])) && (we >= input.length || !isLetterChar(input[we]));
+    let br;
+    if (SHORTFORMS[wl] && isAlone) br = translateLetterSeq(SHORTFORMS[wl]);
+    else if (ALPHABETIC_WORDSIGNS[wl] && isAlone) br = LETTERS[ALPHABETIC_WORDSIGNS[wl]];
+    else if (STRONG_WORDSIGNS[wl] && isAlone) br = STRONG_WORDSIGNS[wl];
+    else if (LOWER_WORDSIGNS[wl] && isAlone) br = LOWER_WORDSIGNS[wl];
+    else br = contractWordInner(wl);
+    const caps = [...word].filter(c => c >= "A" && c <= "Z").length;
+    if (caps === word.length && caps >= 1) out.push(CAP_IND);
+    else if (caps > 0 && word[0] >= "A" && word[0] <= "Z") out.push(CAP_IND);
+    out.push(br);
+    i = we;
+  }
+  return out.join("");
+}
+
+function translateNABCC(input) { return [...input].map(ch => NABCC[ch] || ch).join(""); }
+
+// =========================================================================
+// Persistent state (localStorage)
+// =========================================================================
+const STORAGE_KEY = "braille-tutor-v1";
+function loadState() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultState(); }
+  catch { return defaultState(); }
+}
+function defaultState() {
+  return {
+    xp: 0, hearts: 5, maxHearts: 5,
+    streak: 0, lastDay: null,
+    lessonsCompleted: [], lessonStars: {},
+    weakChars: {},  // char -> miss count (spaced repetition)
+    practiceStats: { correct: 0, wrong: 0 },
+  };
+}
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
+}
+let state = loadState();
+
+// Update streak
+const today = new Date().toISOString().slice(0, 10);
+if (state.lastDay && state.lastDay !== today) {
+  const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+  if (state.lastDay === yesterday) { state.streak++; } else { state.streak = 1; }
+} else if (!state.lastDay) { state.streak = 1; }
+state.lastDay = today;
+state.hearts = Math.min(state.hearts + 1, state.maxHearts); // regen 1 heart per session
+saveState();
+
+function updateHeaderStats() {
+  document.getElementById("total-xp").textContent = state.xp;
+  document.getElementById("daily-streak").textContent = state.streak;
+  document.getElementById("hearts").textContent = state.hearts;
+}
+
+function awardXP(amount) {
+  state.xp += amount;
+  saveState();
+  updateHeaderStats();
+  // Float animation
+  const el = document.createElement("div");
+  el.className = "xp-popup";
+  el.textContent = `+${amount} xp`;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 1000);
+}
+
+// =========================================================================
+// Lesson definitions
+// =========================================================================
+const LESSONS = [
+  { id:"a-e", icon:"a", title:"Letters a-e", desc:"Letters a-e use different combinations of dots 1, 2, 4, and 5.", chars:"abcde", type:"6dot" },
+  { id:"f-j", icon:"f", title:"Letters f-j", desc:"Letters f-j complete the ten patterns built from dots 1, 2, 4, and 5.", chars:"fghij", type:"6dot" },
+  { id:"k-o", icon:"k", title:"Letters k-o", desc:"a-e with dot 3 (bottom-left) added.", chars:"klmno", type:"6dot" },
+  { id:"p-t", icon:"p", title:"Letters p-t", desc:"Letters f-j with dot 3 added.", chars:"pqrst", type:"6dot" },
+  { id:"u-z", icon:"u", title:"Letters u-z", desc:"The final group. Note: 'w' breaks the pattern.", chars:"uvwxyz", type:"6dot" },
+  { id:"nums", icon:"#", title:"Numbers 0-9", desc:"Same as a-j but with a numeric indicator first.", chars:"1234567890", type:"nums" },
+  { id:"g2-words", icon:"G2", title:"Wordsigns", desc:"In Grade 2, whole words shrink to one cell: but=b, the=dots 2346.", type:"g2words",
+    items: [
+      {word:"but",br:"b"},{word:"can",br:"c"},{word:"do",br:"d"},{word:"every",br:"e"},
+      {word:"from",br:"f"},{word:"go",br:"g"},{word:"have",br:"h"},{word:"just",br:"j"},
+      {word:"like",br:"l"},{word:"more",br:"m"},{word:"not",br:"n"},{word:"people",br:"p"},
+      {word:"that",br:"t"},{word:"you",br:"y"},{word:"it",br:"x"},{word:"will",br:"w"},
+      {word:"the",br:String.fromCharCode(0x2800+((1<<1)|(1<<2)|(1<<3)|(1<<5)))},
+      {word:"and",br:String.fromCharCode(0x2800+((1<<0)|(1<<1)|(1<<2)|(1<<3)|(1<<5)))},
+      {word:"for",br:String.fromCharCode(0x2800+((1<<0)|(1<<1)|(1<<2)|(1<<3)|(1<<4)|(1<<5)))},
+      {word:"of",br:String.fromCharCode(0x2800+((1<<0)|(1<<1)|(1<<2)|(1<<4)|(1<<5)))},
+      {word:"with",br:String.fromCharCode(0x2800+((1<<1)|(1<<2)|(1<<3)|(1<<4)|(1<<5)))},
+    ]},
+  { id:"g2-group", icon:"th", title:"Groupsigns", desc:"Letter combos that shrink inside words: ch, sh, th, ing, er, ed...", type:"g2group",
+    items: [
+      {text:"ch",br:dots6(1,6)},{text:"sh",br:dots6(1,4,6)},{text:"th",br:dots6(1,4,5,6)},
+      {text:"wh",br:dots6(1,5,6)},{text:"ing",br:dots6(3,4,6)},{text:"er",br:dots6(1,2,4,5,6)},
+      {text:"ed",br:dots6(1,2,4,6)},{text:"ou",br:dots6(1,2,5,6)},{text:"ow",br:dots6(2,4,6)},
+      {text:"st",br:dots6(3,4)},{text:"ar",br:dots6(3,4,5)},{text:"gh",br:dots6(1,2,6)},
+    ]},
+  { id:"g2-short", icon:"sf", title:"Shortforms", desc:"Common words abbreviated: about=ab, friend=fr, children=chn...", type:"g2short",
+    items: [
+      {word:"about",sf:"ab"},{word:"above",sf:"abv"},{word:"after",sf:"af"},{word:"again",sf:"ag"},
+      {word:"also",sf:"al"},{word:"friend",sf:"fr"},{word:"little",sf:"ll"},{word:"could",sf:"cd"},
+      {word:"should",sf:dots6(1,4,6)+"d"},{word:"would",sf:"wd"},{word:"children",sf:dots6(1,6)+"n"},
+      {word:"said",sf:"sd"},{word:"today",sf:"td"},{word:"together",sf:"tgr"},{word:"quick",sf:"qk"},
+      {word:"good",sf:"gd"},{word:"him",sf:"hm"},{word:"blind",sf:"bl"},{word:"braille",sf:"brl"},
+      {word:"necessary",sf:"nec"},
+    ]},
+];
+
+// =========================================================================
+// Learn panel: lesson road
+// =========================================================================
+function renderLessonRoad() {
+  const road = document.getElementById("lesson-road");
+  let html = "";
+  LESSONS.forEach((lesson, idx) => {
+    const completed = state.lessonsCompleted.includes(lesson.id);
+    const prevCompleted = idx === 0 || state.lessonsCompleted.includes(LESSONS[idx - 1].id);
+    const current = !completed && prevCompleted;
+    const locked = !completed && !current;
+    const stars = state.lessonStars[lesson.id] || 0;
+
+    if (idx > 0) html += `<div class="lesson-connector ${state.lessonsCompleted.includes(LESSONS[idx-1].id) ? 'done' : ''}"></div>`;
+    html += `
+      <div class="lesson-node ${completed ? 'completed' : current ? 'current' : 'locked'}" data-lesson="${idx}" title="${lesson.title}">
+        ${completed ? '<span style="color:var(--correct)">&#10003;</span>' : lesson.icon}
+        <span class="node-label">${lesson.title}</span>
+        ${stars > 0 ? `<span class="node-stars">${'&#9733;'.repeat(stars)}</span>` : ''}
+      </div>
+    `;
+  });
+  road.innerHTML = html;
+
+  road.querySelectorAll(".lesson-node:not(.locked)").forEach(node => {
+    node.addEventListener("click", () => startLesson(parseInt(node.dataset.lesson)));
+  });
+}
+
+// =========================================================================
+// Lesson runner
+// =========================================================================
+let currentLesson = null;
+let exerciseQueue = [];
+let exerciseIndex = 0;
+let lessonCorrect = 0;
+let lessonWrong = 0;
+let lessonLocked = false;
+
+function startLesson(idx) {
+  currentLesson = LESSONS[idx];
+  exerciseQueue = buildExercises(currentLesson);
+  exerciseIndex = 0;
+  lessonCorrect = 0;
+  lessonWrong = 0;
+
+  const panel = document.getElementById("learn");
+  panel.innerHTML = `
+    <div class="progress-bar"><div class="progress-fill" id="lesson-progress" style="width:0%"></div></div>
+    <div id="exercise-container"></div>
+  `;
+  renderExercise();
+}
+
+function buildExercises(lesson) {
+  const exercises = [];
+  if (lesson.type === "6dot" || lesson.type === "nums") {
+    const chars = lesson.chars.split("");
+    // Phase 1: introduce each char (show + identify)
+    chars.forEach(ch => {
+      exercises.push({ type: "introduce", char: ch });
+    });
+    // Phase 2: multiple choice (braille -> text)
+    for (let i = 0; i < 6; i++) {
+      const ch = chars[Math.floor(Math.random() * chars.length)];
+      exercises.push({ type: "mc-read", char: ch, pool: chars });
+    }
+    // Phase 3: multiple choice (text -> braille)
+    for (let i = 0; i < 4; i++) {
+      const ch = chars[Math.floor(Math.random() * chars.length)];
+      exercises.push({ type: "mc-write", char: ch, pool: chars });
+    }
+    // Phase 4: typing
+    for (let i = 0; i < 3; i++) {
+      const ch = chars[Math.floor(Math.random() * chars.length)];
+      exercises.push({ type: "type-read", char: ch });
+    }
+    // Phase 5: dot tapping
+    for (let i = 0; i < 3; i++) {
+      const ch = chars[Math.floor(Math.random() * chars.length)];
+      exercises.push({ type: "dot-tap", char: ch });
+    }
+    // Spaced repetition: add weak chars
+    chars.forEach(ch => {
+      if ((state.weakChars[ch] || 0) >= 2) {
+        exercises.push({ type: "mc-read", char: ch, pool: chars });
+        exercises.push({ type: "dot-tap", char: ch });
+      }
+    });
+  } else if (lesson.type === "g2words") {
+    lesson.items.forEach(item => exercises.push({ type: "introduce-g2", word: item.word, braille: typeof item.br === "string" && item.br.length <= 2 && !item.br.match(/[a-z]/) ? item.br : translateLetterSeq(item.br) }));
+    for (let i = 0; i < 8; i++) {
+      const item = lesson.items[Math.floor(Math.random() * lesson.items.length)];
+      exercises.push({ type: "mc-g2", word: item.word, pool: lesson.items });
+    }
+    for (let i = 0; i < 4; i++) {
+      const item = lesson.items[Math.floor(Math.random() * lesson.items.length)];
+      exercises.push({ type: "type-g2", word: item.word });
+    }
+  } else if (lesson.type === "g2group") {
+    lesson.items.forEach(item => exercises.push({ type: "introduce-group", text: item.text, braille: item.br }));
+    for (let i = 0; i < 8; i++) {
+      const item = lesson.items[Math.floor(Math.random() * lesson.items.length)];
+      exercises.push({ type: "mc-group", text: item.text, braille: item.br, pool: lesson.items });
+    }
+  } else if (lesson.type === "g2short") {
+    lesson.items.forEach(item => exercises.push({ type: "introduce-short", word: item.word, sf: item.sf }));
+    for (let i = 0; i < 8; i++) {
+      const item = lesson.items[Math.floor(Math.random() * lesson.items.length)];
+      exercises.push({ type: "mc-short", word: item.word, sf: item.sf, pool: lesson.items });
+    }
+    for (let i = 0; i < 4; i++) {
+      const item = lesson.items[Math.floor(Math.random() * lesson.items.length)];
+      exercises.push({ type: "type-short", word: item.word, sf: item.sf });
+    }
+  }
+  return exercises;
+}
+
+function getBraille(ch) {
+  if (LETTERS[ch]) return LETTERS[ch];
+  if (DIGITS[ch]) return DIGITS[ch];
+  return ch;
+}
+
+function renderExercise() {
+  if (exerciseIndex >= exerciseQueue.length) { finishLesson(); return; }
+  lessonLocked = false;
+  const ex = exerciseQueue[exerciseIndex];
+  const container = document.getElementById("exercise-container");
+  const progress = (exerciseIndex / exerciseQueue.length) * 100;
+  document.getElementById("lesson-progress").style.width = progress + "%";
+
+  if (ex.type === "introduce") {
+    const br = getBraille(ex.char);
+    const ds = getDots(br);
+    const isDigit = ex.char >= "0" && ex.char <= "9";
+    container.innerHTML = `
+      <div class="exercise">
+        <div class="exercise-prompt">new character<span class="big">${isDigit ? NUM_IND : ''}${br}</span></div>
+        <div class="cell-display">
+          <div>${renderDotGrid(ds)}</div>
+          <div class="cell-info">
+            <div class="cell-char">${ex.char}</div>
+            <div class="cell-dots">dots ${ds.join('-')}</div>
+            ${isDigit ? '<div class="cell-dots">preceded by numeric indicator</div>' : ''}
+          </div>
+        </div>
+        <button class="btn btn-primary" id="ex-next">got it</button>
+      </div>
+    `;
+    document.getElementById("ex-next").addEventListener("click", nextExercise);
+  } else if (ex.type === "mc-read") {
+    renderMCRead(container, ex);
+  } else if (ex.type === "mc-write") {
+    renderMCWrite(container, ex);
+  } else if (ex.type === "type-read") {
+    const br = getBraille(ex.char);
+    const isDigit = ex.char >= "0" && ex.char <= "9";
+    container.innerHTML = `
+      <div class="exercise">
+        <div class="exercise-prompt">type the character<span class="big">${isDigit ? NUM_IND : ''}${br}</span></div>
+        <input class="type-input" id="type-ans" maxlength="1" autofocus>
+        <div id="type-feedback"></div>
+      </div>
+    `;
+    const inp = document.getElementById("type-ans");
+    inp.focus();
+    inp.addEventListener("input", () => {
+      if (lessonLocked) return;
+      const val = inp.value.toLowerCase();
+      if (val === ex.char) {
+        lessonLocked = true;
+        inp.classList.add("correct");
+        handleCorrect(container);
+      } else if (val.length > 0) {
+        lessonLocked = true;
+        inp.classList.add("wrong");
+        handleWrong(container, ex.char, ex.char);
+      }
+    });
+  } else if (ex.type === "dot-tap") {
+    renderDotTap(container, ex);
+  } else if (ex.type === "introduce-g2") {
+    const br = typeof ex.braille === "string" && ex.braille.charCodeAt(0) >= 0x2800 ? ex.braille : translateLetterSeq(ex.braille);
+    container.innerHTML = `
+      <div class="exercise">
+        <div class="exercise-prompt">wordsign<span class="medium">${ex.word}</span><span class="big">${br}</span></div>
+        <div class="info-box">In Grade 2, "${ex.word}" is written as a single sign. This saves space on a braille display.</div>
+        <button class="btn btn-primary" id="ex-next">got it</button>
+      </div>
+    `;
+    document.getElementById("ex-next").addEventListener("click", nextExercise);
+  } else if (ex.type === "mc-g2") {
+    renderMCG2(container, ex);
+  } else if (ex.type === "type-g2") {
+    container.innerHTML = `
+      <div class="exercise">
+        <div class="exercise-prompt">which word is this wordsign for?<span class="big">${translateG2(ex.word)}</span></div>
+        <input class="type-input" id="type-ans" autofocus placeholder="type the word...">
+        <div id="type-feedback"></div>
+      </div>
+    `;
+    const inp = document.getElementById("type-ans");
+    inp.focus();
+    inp.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !lessonLocked) {
+        lessonLocked = true;
+        if (inp.value.toLowerCase().trim() === ex.word) { inp.classList.add("correct"); handleCorrect(container); }
+        else { inp.classList.add("wrong"); handleWrong(container, ex.word, ex.word); }
+      }
+    });
+  } else if (ex.type === "introduce-group") {
+    container.innerHTML = `
+      <div class="exercise">
+        <div class="exercise-prompt">groupsign<span class="medium">${ex.text}</span><span class="big">${ex.braille}</span></div>
+        <div class="cell-display">
+          <div>${renderDotGrid(getDots(ex.braille))}</div>
+          <div class="cell-info">
+            <div class="cell-char">${ex.text}</div>
+            <div class="cell-dots">dots ${getDots(ex.braille).join('-')}</div>
+          </div>
+        </div>
+        <div class="info-box">"${ex.text}" is written as one cell inside words. e.g. "t${ex.text === 'ing' ? 'h' : ''}${ex.text}${ex.text === 'ing' ? '' : 'e'}" uses this sign.</div>
+        <button class="btn btn-primary" id="ex-next">got it</button>
+      </div>
+    `;
+    document.getElementById("ex-next").addEventListener("click", nextExercise);
+  } else if (ex.type === "mc-group") {
+    const items = ex.pool;
+    const wrong = items.filter(it => it.text !== ex.text).sort(() => Math.random() - 0.5).slice(0, 3);
+    const choices = [...wrong.map(it => ({text: it.text, br: it.br})), {text: ex.text, br: ex.braille}].sort(() => Math.random() - 0.5);
+    container.innerHTML = `
+      <div class="exercise">
+        <div class="exercise-prompt">which groupsign is<span class="big">${ex.braille}</span></div>
+        <div class="choices">${choices.map(c => `<button class="choice" data-answer="${c.text}">${c.text}<span class="sub">dots ${getDots(c.br).join('-')}</span></button>`).join('')}</div>
+        <div id="type-feedback"></div>
+      </div>
+    `;
+    container.querySelectorAll(".choice").forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (lessonLocked) return; lessonLocked = true;
+        if (btn.dataset.answer === ex.text) { btn.classList.add("correct"); handleCorrect(container); }
+        else { btn.classList.add("wrong"); container.querySelector(`[data-answer="${ex.text}"]`)?.classList.add("correct"); handleWrong(container, ex.text, ex.text); }
+      });
+    });
+  } else if (ex.type === "introduce-short") {
+    container.innerHTML = `
+      <div class="exercise">
+        <div class="exercise-prompt">shortform<span class="medium">${ex.word}</span><span class="big">${translateLetterSeq(ex.sf)}</span></div>
+        <div class="info-box">"${ex.word}" is abbreviated to "${typeof ex.sf === 'string' ? ex.sf.replace(/[^\x00-\x7f]/g, '') : ex.sf}" in Grade 2 braille. Shortforms drop vowels and other letters to save space.</div>
+        <button class="btn btn-primary" id="ex-next">got it</button>
+      </div>
+    `;
+    document.getElementById("ex-next").addEventListener("click", nextExercise);
+  } else if (ex.type === "mc-short") {
+    const items = ex.pool;
+    const wrong = items.filter(it => it.word !== ex.word).sort(() => Math.random() - 0.5).slice(0, 3);
+    const choices = [...wrong, {word: ex.word, sf: ex.sf}].sort(() => Math.random() - 0.5);
+    container.innerHTML = `
+      <div class="exercise">
+        <div class="exercise-prompt">which word does this shortform represent?<span class="big">${translateLetterSeq(ex.sf)}</span></div>
+        <div class="choices">${choices.map(c => `<button class="choice" data-answer="${c.word}">${c.word}</button>`).join('')}</div>
+        <div id="type-feedback"></div>
+      </div>
+    `;
+    container.querySelectorAll(".choice").forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (lessonLocked) return; lessonLocked = true;
+        if (btn.dataset.answer === ex.word) { btn.classList.add("correct"); handleCorrect(container); }
+        else { btn.classList.add("wrong"); container.querySelector(`[data-answer="${ex.word}"]`)?.classList.add("correct"); handleWrong(container, ex.word, ex.word); }
+      });
+    });
+  } else if (ex.type === "type-short") {
+    container.innerHTML = `
+      <div class="exercise">
+        <div class="exercise-prompt">type the word for this shortform<span class="big">${translateLetterSeq(ex.sf)}</span></div>
+        <input class="type-input" id="type-ans" autofocus placeholder="type the word...">
+        <div id="type-feedback"></div>
+      </div>
+    `;
+    const inp = document.getElementById("type-ans");
+    inp.focus();
+    inp.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !lessonLocked) {
+        lessonLocked = true;
+        if (inp.value.toLowerCase().trim() === ex.word) { inp.classList.add("correct"); handleCorrect(container); }
+        else { inp.classList.add("wrong"); handleWrong(container, ex.word, ex.word); }
+      }
+    });
+  }
+}
+
+function renderMCRead(container, ex) {
+  const pool = ex.pool;
+  const br = getBraille(ex.char);
+  const isDigit = ex.char >= "0" && ex.char <= "9";
+  const wrong = pool.filter(c => c !== ex.char).sort(() => Math.random() - 0.5).slice(0, 3);
+  const choices = [...wrong, ex.char].sort(() => Math.random() - 0.5);
+  container.innerHTML = `
+    <div class="exercise">
+      <div class="exercise-prompt">what character is this?<span class="big">${isDigit ? NUM_IND : ''}${br}</span></div>
+      <div class="choices">${choices.map(c => `<button class="choice" data-answer="${c}">${c}</button>`).join('')}</div>
+      <div id="type-feedback"></div>
+    </div>
+  `;
+  container.querySelectorAll(".choice").forEach(btn => {
+    btn.addEventListener("click", () => {
+      if (lessonLocked) return; lessonLocked = true;
+      if (btn.dataset.answer === ex.char) { btn.classList.add("correct"); handleCorrect(container); }
+      else { btn.classList.add("wrong"); container.querySelector(`[data-answer="${ex.char}"]`)?.classList.add("correct"); handleWrong(container, ex.char, ex.char); }
+    });
+  });
+}
+
+function renderMCWrite(container, ex) {
+  const pool = ex.pool;
+  const wrong = pool.filter(c => c !== ex.char).sort(() => Math.random() - 0.5).slice(0, 3);
+  const choices = [...wrong, ex.char].sort(() => Math.random() - 0.5);
+  container.innerHTML = `
+    <div class="exercise">
+      <div class="exercise-prompt">which braille cell is<span class="medium">${ex.char}</span></div>
+      <div class="choices">${choices.map(c => {
+        const b = getBraille(c);
+        const isD = c >= "0" && c <= "9";
+        return `<button class="choice" data-answer="${c}"><span style="font-size:2.5rem">${isD ? NUM_IND : ''}${b}</span></button>`;
+      }).join('')}</div>
+      <div id="type-feedback"></div>
+    </div>
+  `;
+  container.querySelectorAll(".choice").forEach(btn => {
+    btn.addEventListener("click", () => {
+      if (lessonLocked) return; lessonLocked = true;
+      if (btn.dataset.answer === ex.char) { btn.classList.add("correct"); handleCorrect(container); }
+      else { btn.classList.add("wrong"); container.querySelector(`[data-answer="${ex.char}"]`)?.classList.add("correct"); handleWrong(container, ex.char, ex.char); }
+    });
+  });
+}
+
+function renderMCG2(container, ex) {
+  const items = ex.pool;
+  const wrong = items.filter(it => it.word !== ex.word).sort(() => Math.random() - 0.5).slice(0, 3);
+  const choices = [...wrong.map(it => it.word), ex.word].sort(() => Math.random() - 0.5);
+  const br = translateG2(ex.word);
+  container.innerHTML = `
+    <div class="exercise">
+      <div class="exercise-prompt">which word does this wordsign represent?<span class="big">${br}</span></div>
+      <div class="choices">${choices.map(c => `<button class="choice" data-answer="${c}">${c}</button>`).join('')}</div>
+      <div id="type-feedback"></div>
+    </div>
+  `;
+  container.querySelectorAll(".choice").forEach(btn => {
+    btn.addEventListener("click", () => {
+      if (lessonLocked) return; lessonLocked = true;
+      if (btn.dataset.answer === ex.word) { btn.classList.add("correct"); handleCorrect(container); }
+      else { btn.classList.add("wrong"); container.querySelector(`[data-answer="${ex.word}"]`)?.classList.add("correct"); handleWrong(container, ex.word, ex.word); }
+    });
+  });
+}
+
+function renderDotTap(container, ex) {
+  const br = getBraille(ex.char);
+  const targetDots = getDots(br);
+  const isDigit = ex.char >= "0" && ex.char <= "9";
+  container.innerHTML = `
+    <div class="exercise">
+      <div class="exercise-prompt">tap the dots for<span class="medium">${ex.char}</span>${isDigit ? '<div style="font-size:0.7rem;color:var(--dim)">(just the character dots, not the numeric indicator)</div>' : ''}</div>
+      <div class="dot-input-area">
+        <div class="cell-grid" id="dot-grid">
+          ${[[1,4],[2,5],[3,6]].map(row => row.map(d => `<div class="dot" data-dot="${d}">${d}</div>`).join('')).join('')}
+        </div>
+        <div class="dot-preview" id="dot-preview">${String.fromCharCode(0x2800)}</div>
+      </div>
+      <button class="btn btn-primary" id="dot-check">check</button>
+      <div id="type-feedback"></div>
+    </div>
+  `;
+  const activeDots = new Set();
+  container.querySelectorAll(".dot").forEach(dot => {
+    dot.addEventListener("click", () => {
+      if (lessonLocked) return;
+      const d = parseInt(dot.dataset.dot);
+      if (activeDots.has(d)) { activeDots.delete(d); dot.classList.remove("on"); }
+      else { activeDots.add(d); dot.classList.add("on"); }
+      let bits = 0;
+      activeDots.forEach(dd => bits |= 1 << (dd - 1));
+      document.getElementById("dot-preview").textContent = String.fromCharCode(0x2800 + bits);
+    });
+  });
+  document.getElementById("dot-check").addEventListener("click", () => {
+    if (lessonLocked) return; lessonLocked = true;
+    const match = activeDots.size === targetDots.length && targetDots.every(d => activeDots.has(d));
+    if (match) handleCorrect(container);
+    else handleWrong(container, ex.char, `dots ${targetDots.join('-')}`);
+  });
+}
+
+function renderDotGrid(dotsArray) {
+  let html = '<div class="cell-grid">';
+  for (const row of [[1,4],[2,5],[3,6]]) {
+    for (const d of row) {
+      html += `<div class="dot ${dotsArray.includes(d) ? 'on' : ''}">${d}</div>`;
+    }
+  }
+  return html + '</div>';
+}
+
+function handleCorrect(container) {
+  lessonCorrect++;
+  awardXP(10);
+  const fb = document.getElementById("type-feedback");
+  if (fb) fb.innerHTML = '<div class="feedback correct">correct!</div>';
+  // Play success sound
+  playTone(523, 0.1, "sine"); setTimeout(() => playTone(659, 0.1, "sine"), 100);
+  setTimeout(nextExercise, 800);
+}
+
+function handleWrong(container, char, hint) {
+  lessonWrong++;
+  state.hearts = Math.max(0, state.hearts - 1);
+  state.weakChars[char] = (state.weakChars[char] || 0) + 1;
+  saveState();
+  updateHeaderStats();
+  const fb = document.getElementById("type-feedback");
+  if (fb) fb.innerHTML = `<div class="feedback wrong">correct answer: ${hint}</div>`;
+  playTone(220, 0.15, "square");
+  setTimeout(nextExercise, 1500);
+}
+
+function nextExercise() {
+  exerciseIndex++;
+  if (state.hearts <= 0) { showOutOfHearts(); return; }
+  renderExercise();
+}
+
+function finishLesson() {
+  const stars = lessonWrong === 0 ? 3 : lessonWrong <= 2 ? 2 : 1;
+  const xpBonus = stars * 10;
+  if (!state.lessonsCompleted.includes(currentLesson.id)) {
+    state.lessonsCompleted.push(currentLesson.id);
+  }
+  state.lessonStars[currentLesson.id] = Math.max(state.lessonStars[currentLesson.id] || 0, stars);
+  awardXP(xpBonus);
+  saveState();
+
+  const panel = document.getElementById("learn");
+  panel.innerHTML = `
+    <div class="overlay-card" style="margin:2rem auto">
+      <h2>lesson complete!</h2>
+      <div class="stars-earned">${'&#9733;'.repeat(stars)}${'&#9734;'.repeat(3 - stars)}</div>
+      <div class="xp-earned">+${xpBonus + lessonCorrect * 10} xp</div>
+      <div class="stats-row">
+        <span style="color:var(--correct)">${lessonCorrect} correct</span>
+        <span style="color:var(--wrong)">${lessonWrong} wrong</span>
+      </div>
+      <button class="btn btn-primary" id="back-to-road">continue</button>
+    </div>
+  `;
+  document.getElementById("back-to-road").addEventListener("click", () => {
+    panel.innerHTML = '<div id="lesson-road"></div>';
+    renderLessonRoad();
+  });
+}
+
+function showOutOfHearts() {
+  const panel = document.getElementById("learn");
+  panel.innerHTML = `
+    <div class="overlay-card" style="margin:2rem auto">
+      <h2>out of hearts</h2>
+      <div style="font-size:3rem;margin:1rem 0">&#128148;</div>
+      <div class="info-box">Hearts regenerate when you come back. Review what you missed and try again.</div>
+      <button class="btn btn-primary" id="back-to-road">back to lessons</button>
+    </div>
+  `;
+  state.hearts = Math.max(state.hearts, 1); // give 1 back
+  saveState();
+  document.getElementById("back-to-road").addEventListener("click", () => {
+    panel.innerHTML = '<div id="lesson-road"></div>';
+    renderLessonRoad();
+  });
+}
+
+// =========================================================================
+// Practice (free-play quiz)
+// =========================================================================
+let dotMode = 6;
+let practiceLevel = 0;
+let practiceLocked = false;
+let practiceStreak = 0;
+
+function getPracticePool() {
+  if (practiceLevel === 5) {
+    // G2 wordsigns
+    return Object.entries(ALPHABETIC_WORDSIGNS).map(([word, letter]) => ({ word, br: LETTERS[letter] }))
+      .concat(Object.entries(STRONG_WORDSIGNS).map(([word, br]) => ({ word, br })))
+      .concat(Object.entries(STRONG_CONTRACTIONS).map(([word, br]) => ({ word, br })));
+  }
+  if (dotMode === 8) {
+    return Object.entries(NABCC).filter(([ch]) => ch.match(/[a-zA-Z0-9]/)).map(([ch, br]) => ({ char: ch, br }));
+  }
+  const pools = [
+    "abcdefghij".split("").map(c => ({ char: c, br: LETTERS[c] })),
+    "klmnopqrst".split("").map(c => ({ char: c, br: LETTERS[c] })),
+    "uvwxyz".split("").map(c => ({ char: c, br: LETTERS[c] })),
+    "0123456789".split("").map(c => ({ char: c, br: DIGITS[c] })),
+  ];
+  if (practiceLevel === 4) return pools.flat();
+  return pools[practiceLevel] || pools[0];
+}
+
+function newPracticeQuestion() {
+  practiceLocked = false;
+  const pool = getPracticePool();
+  const area = document.getElementById("practice-area");
+
+  if (practiceLevel === 5) {
+    // G2 wordsign quiz
+    const correct = pool[Math.floor(Math.random() * pool.length)];
+    const wrong = pool.filter(p => p.word !== correct.word).sort(() => Math.random() - 0.5).slice(0, 3);
+    const choices = [...wrong, correct].sort(() => Math.random() - 0.5);
+    const direction = Math.random() > 0.5 ? "read" : "write";
+
+    if (direction === "read") {
+      area.innerHTML = `
+        <div class="exercise" style="margin-top:1rem">
+          <div style="display:flex;gap:1.5rem;color:var(--dim);font-size:0.8rem;margin-bottom:0.5rem">
+            <span style="color:var(--correct)">${state.practiceStats.correct} correct</span>
+            <span style="color:var(--wrong)">${state.practiceStats.wrong} wrong</span>
+            <span style="color:var(--gold)">streak: ${practiceStreak}</span>
+          </div>
+          <div class="exercise-prompt">which word?<span class="big">${correct.br}</span></div>
+          <div class="choices">${choices.map(c => `<button class="choice" data-answer="${c.word}">${c.word}</button>`).join('')}</div>
+        </div>
+      `;
+    } else {
+      area.innerHTML = `
+        <div class="exercise" style="margin-top:1rem">
+          <div style="display:flex;gap:1.5rem;color:var(--dim);font-size:0.8rem;margin-bottom:0.5rem">
+            <span style="color:var(--correct)">${state.practiceStats.correct} correct</span>
+            <span style="color:var(--wrong)">${state.practiceStats.wrong} wrong</span>
+            <span style="color:var(--gold)">streak: ${practiceStreak}</span>
+          </div>
+          <div class="exercise-prompt">which braille?<span class="medium">${correct.word}</span></div>
+          <div class="choices">${choices.map(c => `<button class="choice" data-answer="${c.word}"><span style="font-size:2.5rem">${c.br}</span></button>`).join('')}</div>
+        </div>
+      `;
+    }
+    area.querySelectorAll(".choice").forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (practiceLocked) return; practiceLocked = true;
+        if (btn.dataset.answer === correct.word) {
+          btn.classList.add("correct"); state.practiceStats.correct++; practiceStreak++;
+          awardXP(5); playTone(523, 0.08, "sine");
+        } else {
+          btn.classList.add("wrong"); state.practiceStats.wrong++; practiceStreak = 0;
+          area.querySelector(`[data-answer="${correct.word}"]`)?.classList.add("correct");
+          playTone(220, 0.1, "square");
+        }
+        saveState();
+        setTimeout(newPracticeQuestion, practiceLocked && btn.classList.contains("correct") ? 600 : 1200);
+      });
+    });
+    return;
+  }
+
+  // Standard character quiz
+  const correct = pool[Math.floor(Math.random() * pool.length)];
+  const wrong = pool.filter(p => p.char !== correct.char).sort(() => Math.random() - 0.5).slice(0, 3);
+  const choices = [...wrong, correct].sort(() => Math.random() - 0.5);
+  const direction = Math.random() > 0.5 ? "read" : "write";
+  const isDigit = correct.char >= "0" && correct.char <= "9";
+  const prefix = (isDigit && dotMode === 6) ? NUM_IND : '';
+
+  if (direction === "read") {
+    area.innerHTML = `
+      <div class="exercise" style="margin-top:1rem">
+        <div style="display:flex;gap:1.5rem;color:var(--dim);font-size:0.8rem;margin-bottom:0.5rem">
+          <span style="color:var(--correct)">${state.practiceStats.correct} correct</span>
+          <span style="color:var(--wrong)">${state.practiceStats.wrong} wrong</span>
+          <span style="color:var(--gold)">streak: ${practiceStreak}</span>
+        </div>
+        <div class="exercise-prompt">what character?<span class="big">${prefix}${correct.br}</span></div>
+        <div class="choices">${choices.map(c => `<button class="choice" data-answer="${c.char}">${c.char}</button>`).join('')}</div>
+      </div>
+    `;
+  } else {
+    area.innerHTML = `
+      <div class="exercise" style="margin-top:1rem">
+        <div style="display:flex;gap:1.5rem;color:var(--dim);font-size:0.8rem;margin-bottom:0.5rem">
+          <span style="color:var(--correct)">${state.practiceStats.correct} correct</span>
+          <span style="color:var(--wrong)">${state.practiceStats.wrong} wrong</span>
+          <span style="color:var(--gold)">streak: ${practiceStreak}</span>
+        </div>
+        <div class="exercise-prompt">which braille?<span class="medium">${correct.char}</span></div>
+        <div class="choices">${choices.map(c => {
+          const isD = c.char >= "0" && c.char <= "9";
+          const pf = (isD && dotMode === 6) ? NUM_IND : '';
+          return `<button class="choice" data-answer="${c.char}"><span style="font-size:2.5rem">${pf}${c.br}</span></button>`;
+        }).join('')}</div>
+      </div>
+    `;
+  }
+
+  area.querySelectorAll(".choice").forEach(btn => {
+    btn.addEventListener("click", () => {
+      if (practiceLocked) return; practiceLocked = true;
+      if (btn.dataset.answer === correct.char) {
+        btn.classList.add("correct"); state.practiceStats.correct++; practiceStreak++;
+        awardXP(5); playTone(523, 0.08, "sine");
+      } else {
+        btn.classList.add("wrong"); state.practiceStats.wrong++; practiceStreak = 0;
+        area.querySelector(`[data-answer="${correct.char}"]`)?.classList.add("correct");
+        playTone(220, 0.1, "square");
+      }
+      saveState();
+      setTimeout(newPracticeQuestion, practiceLocked && btn.classList.contains("correct") ? 600 : 1200);
+    });
+  });
+}
+
+// =========================================================================
+// Sandbox
+// =========================================================================
+const TUTOR_KEY = "braille-tutor-conversation-v1";
+const tutorUnits = [
+  ...["abcde", "fghij", "klmno", "pqrst", "uvwxyz"].map(chars => ({
+    name: `letters ${chars[0]}-${chars.at(-1)}`,
+    cards: [...chars].map(label => ({ label, braille: LETTERS[label], kind: "letter" }))
+  })),
+  { name: "numbers", cards: [..."1234567890"].map(label => ({ label, braille: NUM_IND + DIGITS[label], kind: "number" })) },
+  { name: "uncontracted words", cards: ["cat", "dog", "bag", "bed", "cab"].map(label => ({ label, braille: [...label].map(c => LETTERS[c]).join(""), kind: "uncontracted word" })) },
+  { name: "grade 2 wordsigns", cards: Object.entries(ALPHABETIC_WORDSIGNS).map(([label, letter]) => ({ label, braille: LETTERS[letter], kind: "wordsign" })) },
+  { name: "grade 2 strong contractions", cards: Object.entries(STRONG_CONTRACTIONS).map(([label, braille]) => ({ label, braille, kind: "contraction" })) },
+  { name: "grade 2 shortforms", cards: LESSONS.find(l => l.id === "g2-short").items.map(item => ({ label: item.word, braille: translateLetterSeq(item.sf), kind: "shortform" })) }
+];
+const tutorCards = tutorUnits.flatMap((unit, index) => unit.cards.map(card => ({ ...card, unit: index, id: `${index}:${card.label}` })));
+const tutorTasks = tutorCards.flatMap(card => ["read", "write"].map(direction => ({ card, direction, id: `${card.id}:${direction}` })));
+let tutorProgress = { unit: 0, records: {}, brailleFirst: false };
+let tutorStorageAvailable = true;
+try {
+  const stored = JSON.parse(localStorage.getItem(TUTOR_KEY));
+  if (stored && Number.isInteger(stored.unit) && stored.unit >= 0 && stored.unit < tutorUnits.length) {
+    tutorProgress.unit = stored.unit;
+    tutorProgress.brailleFirst = stored.brailleFirst === true;
+    for (const task of tutorTasks) {
+      const r = stored.records?.[task.id];
+      if (r && [r.box, r.due, r.misses, r.seen].every(n => Number.isFinite(n) && n >= 0)) {
+        tutorProgress.records[task.id] = { box: Math.min(r.box, 3), due: r.due, misses: r.misses, seen: r.seen };
+      }
+    }
+  }
+} catch { tutorStorageAvailable = false; }
+let tutorRound = null;
+let tutorQuestion = null;
+let tutorAssisted = false;
+let tutorAnswered = false;
+let tutorLastTask = null;
+
+function saveTutorProgress() {
+  try { localStorage.setItem(TUTOR_KEY, JSON.stringify(tutorProgress)); }
+  catch { tutorStorageAvailable = false; }
+}
+
+function tutorRecord(task) {
+  return tutorProgress.records[task.id] || { box: 0, due: 0, misses: 0, seen: 0 };
+}
+
+function tutorMessage(text, cell = "", speaker = "tutor") {
+  const log = document.getElementById("tutor-log");
+  const message = document.createElement("div");
+  message.className = "tutor-message";
+  message.dataset.speaker = speaker;
+  for (const [className, content] of [["tutor-speaker", speaker], ["tutor-print", text], ["tutor-braille", translateG1(text)]]) {
+    const node = document.createElement("div");
+    node.className = className;
+    node.textContent = content;
+    message.appendChild(node);
+  }
+  if (cell) {
+    const node = document.createElement("span");
+    node.className = "tutor-cell";
+    node.textContent = cell;
+    node.setAttribute("aria-label", cellDots(cell));
+    message.appendChild(node);
+  }
+  log.appendChild(message);
+  while (log.children.length > 60) log.firstElementChild.remove();
+  log.scrollTop = log.scrollHeight;
+}
+
+function cellDots(braille) {
+  return [...braille].map(cell => `dots ${getDots(cell).join("-") || "none"}`).join(" / ");
+}
+
+function tutorExplanation(card) {
+  let text = `${card.label}: ${cellDots(card.braille)}.`;
+  if (card.kind === "number") text += " The first cell is the numeric indicator. The next cell uses the a-j pattern for the digit.";
+  if (card.kind === "wordsign") text += " This is a whole-word meaning when standing alone in contracted UEB, not a substitution inside any word.";
+  if (card.kind === "contraction") text += " This exercise uses the contraction as a whole word. Its use inside words has additional UEB rules.";
+  if (card.kind === "shortform") text += " This is a whole-word shortform. Do not apply it to arbitrary substrings.";
+  if (card.kind === "uncontracted word") text += " Write one cell per lowercase letter; no contractions in this exercise.";
+  return text;
+}
+
+function updateTutorStatus() {
+  const r = tutorRound;
+  document.getElementById("tutor-status").textContent =
+    (r ? `${r.review ? "review" : tutorUnits[r.unit].name} | ${r.index} of ${r.queue.length} answered | ${r.correct} correct | ${r.xp} xp` : `ready | ${tutorUnits[tutorProgress.unit].name}`) +
+    (tutorStorageAvailable ? " | progress saved locally" : " | storage unavailable; progress is temporary");
+}
+
+function startTutorRound(review = false) {
+  if (tutorQuestion && !tutorAnswered) {
+    tutorMessage("You have an unanswered question. Answer it, ask for a hint, or use skip before starting another round.");
+    return;
+  }
+  const now = Date.now();
+  let tasks = tutorTasks.filter(task => review
+    ? tutorRecord(task).seen > 0 && (tutorRecord(task).misses > 0 || tutorRecord(task).due <= now)
+    : task.card.unit === tutorProgress.unit);
+  if (!tasks.length) {
+    tutorMessage("No mistakes or due reviews yet. Type test me to begin a new round.");
+    return;
+  }
+  tasks.sort((a, b) => {
+    const x = tutorRecord(a), y = tutorRecord(b);
+    return Number(y.misses > 0) - Number(x.misses > 0) || Number(y.due <= now) - Number(x.due <= now) || x.seen - y.seen;
+  });
+  tutorRound = { unit: tutorProgress.unit, queue: tasks.slice(0, 5), index: 0, correct: 0, xp: 0, review, retries: new Set() };
+  tutorMessage(`Let's do ${tutorRound.queue.length} questions. Read or build braille cells. Hints are free, and mistakes never lock you out. Use next after each explanation.`);
+  askTutorQuestion();
+}
+
+function askTutorQuestion() {
+  const r = tutorRound;
+  if (r.index >= r.queue.length) {
+    tutorQuestion = null;
+    document.getElementById("tutor-dots").hidden = true;
+    tutorMessage(`Round complete: ${r.correct} of ${r.queue.length} correct, ${r.xp} xp. Type test me for another round, or review for mistakes and due cards.`);
+    if (!r.review && tutorTasks.filter(t => t.card.unit === r.unit).every(t => tutorRecord(t).box > 0) && r.unit < tutorUnits.length - 1) {
+      tutorProgress.unit = r.unit + 1;
+      tutorMessage(`You have recalled every item in this unit in both directions. Next unit: ${tutorUnits[tutorProgress.unit].name}.`);
+    }
+    saveTutorProgress();
+    updateTutorStatus();
+    return;
+  }
+  tutorQuestion = r.queue[r.index];
+  tutorLastTask = tutorQuestion;
+  tutorAssisted = false;
+  tutorAnswered = false;
+  const { card, direction } = tutorQuestion;
+  const reading = direction === "read";
+  const context = ["wordsign", "shortform", "contraction"].includes(card.kind) ? " In contracted UEB, standing alone." : "";
+  tutorMessage(reading
+    ? `Question ${r.index + 1}: read this ${card.kind}.${context} Type the print answer.`
+    : `Question ${r.index + 1}: write ${card.label} as a ${card.kind}.${context} Enter braille or dot numbers, one cell per / separator.`, reading ? card.braille : "");
+  document.getElementById("tutor-dots").hidden = reading || card.braille.length !== 1;
+  document.querySelectorAll("[data-tutor-dot]").forEach(button => {
+    button.setAttribute("aria-pressed", "false");
+    button.classList.remove("on");
+  });
+  updateTutorStatus();
+}
+
+function parseTutorCells(answer) {
+  if (/^[\u2800-\u283f]+$/u.test(answer)) return answer;
+  const cells = answer.replace(/^dots?\s+/i, "").split("/");
+  if (cells.some(cell => !/^[1-6](?:[\s,-]*[1-6])*$/.test(cell.trim()))) return null;
+  return cells.map(cell => {
+    const numbers = cell.match(/[1-6]/g).map(Number);
+    return new Set(numbers).size === numbers.length ? dots6(...numbers) : null;
+  }).reduce((result, cell) => result === null || cell === null ? null : result + cell, "");
+}
+
+function gradeTutorAnswer(answer, skip = false) {
+  if (!tutorQuestion || tutorAnswered) {
+    tutorMessage("Type next to continue, or test me to begin. Type help for topics and commands.");
+    return;
+  }
+  const task = tutorQuestion;
+  let actual = answer.toLowerCase();
+  if (!skip && task.direction === "write") {
+    actual = parseTutorCells(answer);
+    if (actual === null) {
+      tutorMessage("Enter braille cells or dot numbers, for example 1-2. Separate multiple cells with /, for example 1 / 1-2. No score change; try again.");
+      return;
+    }
+  }
+  const correct = !skip && actual === (task.direction === "read" ? task.card.label : task.card.braille);
+  tutorAnswered = true;
+  const record = tutorRecord(task);
+  const recalled = correct && !tutorAssisted;
+  const box = recalled ? Math.min(record.box + 1, 3) : 0;
+  tutorProgress.records[task.id] = {
+    box,
+    due: Date.now() + (box ? [0, 1, 3, 7][box] * 86400000 : 60000),
+    misses: recalled ? 0 : record.misses + 1,
+    seen: Date.now()
+  };
+  const r = tutorRound;
+  if (correct) r.correct++;
+  if (recalled) { r.xp += 10; awardXP(10); }
+  if (!recalled && !r.retries.has(task.id)) {
+    r.retries.add(task.id);
+    r.queue.splice(Math.min(r.index + 3, r.queue.length), 0, task);
+  }
+  r.index++;
+  saveTutorProgress();
+  tutorMessage(`${correct ? (tutorAssisted ? "Correct with help. Let's recall it again later." : "Correct. You earned 10 xp.") : (skip ? "Skipped. Let's learn this one." : "Not quite. Let's look at the pattern.")} ${tutorExplanation(task.card)} Type next when ready.`, task.card.braille);
+  document.getElementById("tutor-dots").hidden = true;
+  updateTutorStatus();
+}
+
+function submitTutor(raw) {
+  const answer = raw.trim();
+  if (!answer) return;
+  tutorMessage(answer, "", "you");
+  const command = answer.toLowerCase().replace(/[.!?]+$/, "").trim();
+
+  // Intent detection: normalize natural phrasing to commands
+  function detectIntent(text) {
+    const t = text.replace(/['']/g, "'");
+    // Start / test
+    if (/\b(test|quiz|start|begin|go|ready|let'?s go|let'?s start|practice)\b/.test(t)) return "start";
+    // Review
+    if (/\b(review|revisit|redo|retry|mistakes|missed|weak)\b/.test(t)) return "review";
+    // Help
+    if (/\b(help|commands?|what can you|how do i|how does|instructions?)\b/.test(t) && !/\bhow old\b/.test(t)) return "help";
+    // Hint / explain
+    if (/\b(hint|explain|why|show me the answer|what is it|tell me)\b/.test(t) && !/\btell me about\b/.test(t)) return "hint";
+    // Next / continue
+    if (/\b(next|continue|move on|keep going|go on|proceed)\b/.test(t)) return "next";
+    // Skip
+    if (/\b(skip|pass|don'?t know|no idea|i give up|surrender)\b/.test(t)) return "skip";
+    // Topic: letters
+    if (/\b(letters?|alphabet|a-z|a to z)\b/.test(t)) return "topic:0";
+    // Topic: numbers
+    if (/\b(numbers?|digits?|0-9|counting|number system|numeric)\b/.test(t)) return "topic:5";
+    // Topic: words
+    if (/\b(words?|spelling|uncontracted)\b/.test(t) && !/\bwordsigns?\b/.test(t)) return "topic:6";
+    // Topic: grade 2 wordsigns
+    if (/\b(grade\s*2|g2|wordsigns?|contractions?|contracted)\b/.test(t)) return "topic:7";
+    // Topic: shortforms
+    if (/\b(shortforms?|abbreviations?)\b/.test(t)) return "topic:9";
+    return null;
+  }
+
+  const intent = detectIntent(command);
+
+  if (intent === "start") return startTutorRound();
+  if (intent === "review") return startTutorRound(true);
+  if (intent === "help") {
+    tutorMessage("I am a local guided tutor, not a general chatbot. Commands: test me, hint, explain, next, skip, review. Topics: letters, numbers, words, grade 2, shortforms. You can also say things like 'teach me numbers' or 'practice shortforms'. Write answers using braille cells or dot numbers. Reading answers use print. Each skill returns for review after 1, 3, then 7 days. Helped or missed items return sooner. No hearts required.");
+    return;
+  }
+  if (intent === "hint") {
+    if (!tutorLastTask) { tutorMessage("Type test me first, then ask for a hint or explanation."); return; }
+    if (tutorQuestion && !tutorAnswered) tutorAssisted = true;
+    tutorMessage(tutorExplanation(tutorLastTask.card), tutorLastTask.card.braille);
+    return;
+  }
+  if (intent === "next") {
+    if (tutorQuestion && !tutorAnswered) { tutorMessage("Try this question first, or use hint or skip. There is no penalty for taking your time."); return; }
+    if (!tutorRound || !tutorQuestion) return startTutorRound();
+    return askTutorQuestion();
+  }
+  if (intent === "skip") return gradeTutorAnswer("", true);
+  if (intent?.startsWith("topic:")) {
+    const unit = parseInt(intent.split(":")[1]);
+    if (tutorQuestion && !tutorAnswered) { tutorMessage("Answer or skip the current question before switching topics."); return; }
+    tutorProgress.unit = unit;
+    saveTutorProgress();
+    return startTutorRound();
+  }
+  // If no intent matched and it looks conversational, say so honestly
+  if (/[?]/.test(answer) || (answer.split(/\s+/).length > 3 && !(tutorQuestion?.direction === "write" && parseTutorCells(answer) !== null))) {
+    tutorMessage("I didn't understand that. Try: test me, numbers, grade 2, hint, explain, next, skip, review. You can also say things naturally like 'teach me letters' or 'practice shortforms'.");
+    return;
+  }
+  gradeTutorAnswer(answer);
+}
+
+function initTutor() {
+  const input = document.getElementById("sandbox-input");
+  document.getElementById("tutor-form").addEventListener("submit", event => {
+    event.preventDefault();
+    submitTutor(input.value);
+    input.value = "";
+    input.focus();
+  });
+  document.querySelectorAll("[data-tutor-command]").forEach(button => button.addEventListener("click", () => {
+    submitTutor(button.dataset.tutorCommand);
+    input.focus();
+  }));
+  document.querySelectorAll("[data-tutor-dot]").forEach(button => button.addEventListener("click", () => {
+    const pressed = button.getAttribute("aria-pressed") !== "true";
+    button.setAttribute("aria-pressed", String(pressed));
+    button.classList.toggle("on", pressed);
+  }));
+  document.getElementById("tutor-send-dots").addEventListener("click", () => {
+    const selected = [...document.querySelectorAll('[data-tutor-dot][aria-pressed="true"]')].map(button => Number(button.dataset.tutorDot));
+    submitTutor(dots6(...selected));
+    input.focus();
+  });
+  const toggle = document.getElementById("tutor-braille-first");
+  toggle.checked = tutorProgress.brailleFirst;
+  document.getElementById("tutor-log").classList.toggle("braille-first", toggle.checked);
+  toggle.addEventListener("change", () => {
+    tutorProgress.brailleFirst = toggle.checked;
+    document.getElementById("tutor-log").classList.toggle("braille-first", toggle.checked);
+    saveTutorProgress();
+    updateTutorStatus();
+  });
+  tutorMessage("Let's learn braille together. Type test me and press Enter. We will alternate reading cells and building them. You can ask for help at any time. Type numbers, words, grade 2, or shortforms to choose a topic.");
+  updateTutorStatus();
+}
+
+let sandboxGrade = 1;
+
+function updateSandbox() {
+  const input = document.getElementById("translation-input").value;
+  const output = document.getElementById("sandbox-output");
+  const info = document.getElementById("sandbox-info");
+  output.textContent = dotMode === 8 ? translateNABCC(input) : sandboxGrade === 2 ? translateG2(input) : translateG1(input);
+  info.textContent = "Experimental translation; not a standards-validated transcriber or the tutor answer key.";
+  if (input && dotMode === 6 && sandboxGrade === 2) {
+    info.textContent += ` G1: ${translateG1(input).length} cells. G2: ${output.textContent.length} cells.`;
+  }
+}
+
+// =========================================================================
+// Audio feedback
+// =========================================================================
+let audioCtx;
+function playTone(freq, dur, type) {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type; osc.frequency.value = freq;
+    gain.gain.value = 0.12;
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(); osc.stop(audioCtx.currentTime + dur);
+  } catch {}
+}
+
+// =========================================================================
+// Event wiring
+// =========================================================================
+
+// Tabs
+document.querySelectorAll(".tab").forEach(tab => {
+  tab.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+    document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+    tab.classList.add("active");
+    document.getElementById(tab.dataset.tab).classList.add("active");
+    if (tab.dataset.tab === "learn") {
+      const panel = document.getElementById("learn");
+      if (!panel.querySelector("#lesson-road")) panel.innerHTML = '<div id="lesson-road"></div>';
+      renderLessonRoad();
+    }
+    if (tab.dataset.tab === "practice") newPracticeQuestion();
+  });
+});
+
+// Dot mode (6/8)
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest(".mode-btn[data-dots]");
+  if (!btn) return;
+  const panel = btn.closest(".panel");
+  if (!panel) return;
+  panel.querySelectorAll(".mode-btn[data-dots]").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  dotMode = parseInt(btn.dataset.dots);
+  const tab = document.querySelector(".tab.active")?.dataset.tab;
+  if (tab === "practice") newPracticeQuestion();
+  if (tab === "sandbox") updateSandbox();
+});
+
+// Practice level
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest(".quiz-level");
+  if (!btn) return;
+  document.querySelectorAll(".quiz-level").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  practiceLevel = parseInt(btn.dataset.level);
+  practiceStreak = 0;
+  newPracticeQuestion();
+});
+
+// Sandbox grade
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest(".sandbox-grade-btn");
+  if (!btn) return;
+  document.querySelectorAll(".sandbox-grade-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  sandboxGrade = parseInt(btn.dataset.grade);
+  updateSandbox();
+});
+
+// Sandbox input
+document.getElementById("translation-input").addEventListener("input", updateSandbox);
+initTutor();
+
+// Init
+updateHeaderStats();
+renderLessonRoad();
+</script>
+</body>
+</html>
