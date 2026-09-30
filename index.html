@@ -1523,7 +1523,7 @@ function submitTutor(raw) {
     tutorMessage(`Hey ${name}. I'm your braille tutor — ask me anything about braille, or type test me to start a quiz. Topics: letters, numbers, words, grade 2, shortforms.`);
     return;
   }
-  if (/\b(what'?s your name|who are you|your name|what are you)\b/i.test(answer)) {
+  if (/\b(what'?s (your|ur) name|who are you|(your|ur) name|what are you)\b/i.test(answer)) {
     const greeting = tutorProgress.name ? `${tutorProgress.name}, I` : "I";
     tutorMessage(`${greeting} don't have a name — I'm a braille tutor with a fine-tuned AI brain. I can teach UEB letters, numbers, words, Grade 2 wordsigns, groupsigns, and shortforms. Ask me anything about braille, or type test me to start a quiz.`);
     return;
@@ -1580,10 +1580,16 @@ async function askLLM(userText) {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 45000);
 
+    // Inject user context so the LLM can personalize
+    const context = tutorProgress.name ? `The learner's name is ${tutorProgress.name}. ` : "";
+    const unit = tutorUnits[tutorProgress.unit];
+    const systemNote = { role: "system", content: `${context}Current topic: ${unit ? unit.name : "letters"}.` };
+    const messages = [systemNote, ...llmHistory];
+
     const res = await fetch(LLM_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages: llmHistory, max_tokens: 400 }),
+      body: JSON.stringify({ messages, max_tokens: 400 }),
       signal: controller.signal,
     });
     clearTimeout(timeout);
