@@ -1239,11 +1239,12 @@ function tutorRecord(task) {
   return tutorProgress.records[task.id] || { box: 0, due: 0, misses: 0, seen: 0 };
 }
 
-function tutorMessage(text, cell = "", speaker = "tutor") {
+function tutorMessage(text, cell = "", speaker = "tutor", id = "") {
   const log = document.getElementById("tutor-log");
   const message = document.createElement("div");
   message.className = "tutor-message";
   message.dataset.speaker = speaker;
+  if (id) message.id = id;
   for (const [className, content] of [["tutor-speaker", speaker], ["tutor-print", text], ["tutor-braille", translateG1(text)]]) {
     const node = document.createElement("div");
     node.className = className;
@@ -1543,12 +1544,64 @@ function submitTutor(raw) {
     tutorMessage("Type test me to start a round first.");
     return;
   }
-  // If no intent matched and it looks conversational, say so honestly
+  // If it looks conversational / open-ended, ask the LLM
   if (/[?]/.test(answer) || (answer.split(/\s+/).length > 3 && !(tutorQuestion?.direction === "write" && parseTutorCells(answer) !== null))) {
-    tutorMessage("I didn't understand that. Try: test me, numbers, grade 2, hint, explain, next, skip, review. You can also say things naturally like 'teach me letters' or 'practice shortforms'.");
+    askLLM(answer);
     return;
   }
   gradeTutorAnswer(answer);
+}
+
+// ── LLM integration ─────────────────────────────────────────────────────
+const LLM_ENDPOINT = "https://salus--braille-tutor-brailletutor-api.modal.run";
+let llmHistory = [];
+let llmPending = false;
+
+async function askLLM(userText) {
+  if (llmPending) {
+    tutorMessage("Thinking about the last question still — one moment.");
+    return;
+  }
+  // Keep last 6 turns of context
+  llmHistory.push({ role: "user", content: userText });
+  if (llmHistory.length > 12) llmHistory = llmHistory.slice(-12);
+
+  llmPending = true;
+  tutorMessage("Thinking...", "", "tutor", "llm-thinking");
+
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30000);
+
+    const res = await fetch(LLM_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages: llmHistory, max_tokens: 400 }),
+      signal: controller.signal,
+    });
+    clearTimeout(timeout);
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    const reply = data.response || "I couldn't generate a response. Try test me to start a round.";
+
+    llmHistory.push({ role: "assistant", content: reply });
+
+    // Replace "Thinking..." with actual response
+    const thinking = document.getElementById("llm-thinking");
+    if (thinking) thinking.remove();
+    tutorMessage(reply);
+  } catch (err) {
+    const thinking = document.getElementById("llm-thinking");
+    if (thinking) thinking.remove();
+    if (err.name === "AbortError") {
+      tutorMessage("That took too long. The AI tutor might be waking up — try again in a moment, or use test me to practice with the local tutor.");
+    } else {
+      tutorMessage("Couldn't reach the AI tutor. You can still use: test me, numbers, grade 2, hint, explain, next, skip, review.");
+    }
+  } finally {
+    llmPending = false;
+  }
 }
 
 function initTutor() {
